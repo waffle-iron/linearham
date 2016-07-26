@@ -5,7 +5,7 @@
 #include "../yaml-cpp/include/yaml-cpp/yaml.h"
 
 #include "core.hpp"
-#include "smooshable_chain.hpp"
+#include "smooshable_stack.hpp"
 
 
 
@@ -262,6 +262,114 @@ TEST_CASE("Smooshable", "[smooshable]") {
   REQUIRE(chain.smooshed()[0].viterbi() == correct_AB_viterbi);
   REQUIRE(chain.smooshed().back().viterbi() == correct_ABC_viterbi);
   REQUIRE(chain.viterbi_paths() == correct_viterbi_paths);
+}
+
+
+// SmooshableStack tests
+
+TEST_CASE("SmooshableStack", "[smooshable_stack]") {
+  Eigen::MatrixXd A1(2,3);
+  A1 <<
+  0.5, 0.71, 0.13,
+  0.29, 0.31, 0.37;
+  Eigen::MatrixXd A2(2,3);
+  A2 <<
+  0.45, 0.57, 0.18,
+  0.67, 0.15, 0.72;
+  double scaler_a = 50;
+  Smooshable s_A1 = Smooshable(A1, scaler_a);
+  Smooshable s_A2 = Smooshable(A2, scaler_a);
+  SmooshableVector sv_A = {s_A1, s_A2};
+  SmooshableStack ss_A(sv_A);
+  
+  Eigen::MatrixXd B1(3,2);
+  B1 <<
+  0.3,  0.37,
+  0.29, 0.41,
+  0.11, 0.97;
+  Eigen::MatrixXd B2(3,2);
+  B2 <<
+  0.05, 0.10,
+  0.38, 0.74,
+  0.92, 0.19;
+  double scaler_b = 50;
+  Smooshable s_B1 = Smooshable(B1, scaler_b);
+  Smooshable s_B2 = Smooshable(B2, scaler_b);
+  SmooshableVector sv_B = {s_B1, s_B2};
+  SmooshableStack ss_B(sv_B);
+  
+  Eigen::MatrixXd correct_AB11_marginal(2,2);
+  Eigen::MatrixXd correct_AB12_marginal(2,2);
+  Eigen::MatrixXd correct_AB21_marginal(2,2);
+  Eigen::MatrixXd correct_AB22_marginal(2,2);
+  correct_AB11_marginal <<
+  (0.5*0.3+0.71*0.29+0.13*0.11)*50*50 , (0.5*0.37+0.71*0.41+0.13*0.97)*50*50,
+  (0.29*0.3+0.31*0.29+0.37*0.11)*50*50, (0.29*0.37+0.31*0.41+0.37*0.97)*50*50;
+  correct_AB12_marginal <<
+  (0.5*0.05+0.71*0.38+0.13*0.92)*50*50 , (0.5*0.10+0.71*0.74+0.13*0.19)*50*50,
+  (0.29*0.05+0.31*0.38+0.37*0.92)*50*50, (0.29*0.10+0.31*0.74+0.37*0.19)*50*50;
+  correct_AB21_marginal <<
+  (0.45*0.3+0.57*0.29+0.18*0.11)*50*50, (0.45*0.37+0.57*0.41+0.18*0.97)*50*50,
+  (0.67*0.3+0.15*0.29+0.72*0.11)*50*50, (0.67*0.37+0.15*0.41+0.72*0.97)*50*50;
+  correct_AB22_marginal <<
+  (0.45*0.05+0.57*0.38+0.18*0.92)*50*50, (0.45*0.10+0.57*0.74+0.18*0.19)*50*50,
+  (0.67*0.05+0.15*0.38+0.72*0.92)*50*50, (0.67*0.10+0.15*0.74+0.72*0.19)*50*50;
+  
+  Eigen::MatrixXd correct_AB11_viterbi(2,2);
+  Eigen::MatrixXd correct_AB12_viterbi(2,2);
+  Eigen::MatrixXd correct_AB21_viterbi(2,2);
+  Eigen::MatrixXd correct_AB22_viterbi(2,2);
+  correct_AB11_viterbi <<
+  (0.71*0.29)*50*50, (0.71*0.41)*50*50,
+  (0.31*0.29)*50*50, (0.37*0.97)*50*50;
+  correct_AB12_viterbi <<
+  (0.71*0.38)*50*50, (0.71*0.74)*50*50,
+  (0.37*0.92)*50*50, (0.31*0.74)*50*50;
+  correct_AB21_viterbi <<
+  (0.57*0.29)*50*50, (0.57*0.41)*50*50,
+  (0.67*0.3)*50*50 , (0.72*0.97)*50*50;
+  correct_AB22_viterbi <<
+  (0.57*0.38)*50*50, (0.57*0.74)*50*50,
+  (0.72*0.92)*50*50, (0.72*0.19)*50*50;
+  
+  Eigen::MatrixXi correct_AB11_viterbi_idx(2,2);
+  Eigen::MatrixXi correct_AB12_viterbi_idx(2,2);
+  Eigen::MatrixXi correct_AB21_viterbi_idx(2,2);
+  Eigen::MatrixXi correct_AB22_viterbi_idx(2,2);
+  correct_AB11_viterbi_idx <<
+  1,1,
+  1,2;
+  correct_AB12_viterbi_idx <<
+  1,1,
+  2,1;
+  correct_AB21_viterbi_idx <<
+  1,1,
+  0,2;
+  correct_AB22_viterbi_idx <<
+  1,1,
+  2,2;
+  std::vector<Eigen::MatrixXi> correct_AB_viterbi_idxs = {correct_AB11_viterbi_idx,
+                                                          correct_AB12_viterbi_idx,
+                                                          correct_AB21_viterbi_idx,
+                                                          correct_AB22_viterbi_idx};
+  
+  std::vector<std::string> correct_AB_labels = {"0,0", "0,1", "1,0", "1,1"};
+  
+  SmooshableStack ss_AB;
+  std::vector<Eigen::MatrixXi> AB_viterbi_idxs;
+  std::tie(ss_AB, AB_viterbi_idxs) = SmooshStack(ss_A, ss_B);
+  
+  REQUIRE(ss_AB.labels() == correct_AB_labels);
+  REQUIRE(ss_AB.scaler() == 50*50);
+  REQUIRE(ss_AB.marginal(2*0+0).isApprox(correct_AB11_marginal));
+  REQUIRE(ss_AB.marginal(2*0+1).isApprox(correct_AB12_marginal));
+  REQUIRE(ss_AB.marginal(2*1+0).isApprox(correct_AB21_marginal));
+  REQUIRE(ss_AB.marginal(2*1+1).isApprox(correct_AB22_marginal));
+  REQUIRE(ss_AB.viterbi(2*0+0).isApprox(correct_AB11_viterbi));
+  REQUIRE(ss_AB.viterbi(2*0+1).isApprox(correct_AB12_viterbi));
+  REQUIRE(ss_AB.viterbi(2*1+0).isApprox(correct_AB21_viterbi));
+  REQUIRE(ss_AB.viterbi(2*1+1).isApprox(correct_AB22_viterbi));
+  REQUIRE(AB_viterbi_idxs == correct_AB_viterbi_idxs);
 }
 
 
