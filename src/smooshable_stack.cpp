@@ -25,16 +25,20 @@ SmooshableStack::SmooshableStack(int left_flex, int right_flex, int n) {
 
 /// @brief Constructor starting from a vector of Smooshables.
 SmooshableStack::SmooshableStack(const SmooshableVector& smooshs) {
+  
+  // If there's only one Smooshable, there is nothing to stack.
+  if (smooshs.size() >= 2) {
 
-  for (int i = 0; i < smooshs.size() - 1; i++) {
+    for (int i = 0; i < smooshs.size() - 1; i++) {
   
-    assert(smooshs[i].marginal().rows() == smooshs[i+1].marginal().rows());
-    assert(smooshs[i].marginal().cols() == smooshs[i+1].marginal().cols());
-    assert(smooshs[i].scaler() == smooshs[i+1].scaler());
-  
+      assert(smooshs[i].marginal().rows() == smooshs[i+1].marginal().rows());
+      assert(smooshs[i].marginal().cols() == smooshs[i+1].marginal().cols());
+      assert(smooshs[i].scaler() == smooshs[i+1].scaler());
+    
+    }
   }
   
-  scaler_ = smooshs[1].scaler();
+  scaler_ = smooshs[0].scaler();
   marginals_.resize(smooshs.size());
   viterbis_.resize(smooshs.size());
   labels_.resize(smooshs.size());

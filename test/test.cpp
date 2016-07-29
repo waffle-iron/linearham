@@ -5,7 +5,7 @@
 #include "../yaml-cpp/include/yaml-cpp/yaml.h"
 
 #include "core.hpp"
-#include "smooshable_stack.hpp"
+#include "smooshable_stack_chain.hpp"
 
 
 
@@ -370,6 +370,74 @@ TEST_CASE("SmooshableStack", "[smooshable_stack]") {
   REQUIRE(ss_AB.viterbi(2*1+0).isApprox(correct_AB21_viterbi));
   REQUIRE(ss_AB.viterbi(2*1+1).isApprox(correct_AB22_viterbi));
   REQUIRE(AB_viterbi_idxs == correct_AB_viterbi_idxs);
+  
+  Eigen::MatrixXd C1(2,1);
+  C1 <<
+  0.86,
+  0.28;
+  double scaler_c = 25;
+  Smooshable s_C1 = Smooshable(C1, scaler_c);
+  SmooshableVector sv_C = {s_C1};
+  SmooshableStack ss_C(sv_C);
+  
+  std::vector<SmooshableStack> ss_ABC = {ss_A, ss_B, ss_C};
+  SmooshableStackChain chain(ss_ABC);
+  
+  Eigen::MatrixXd correct_ABC11_viterbi(2,1);
+  Eigen::MatrixXi correct_ABC11_viterbi_idx(2,1);
+  correct_ABC11_viterbi <<
+  0.71*0.29*0.86*50*50*25,
+  0.37*0.97*0.28*50*50*25;
+  correct_ABC11_viterbi_idx <<
+  0,
+  1;
+  Eigen::MatrixXd correct_ABC12_viterbi(2,1);
+  Eigen::MatrixXi correct_ABC12_viterbi_idx(2,1);
+  correct_ABC12_viterbi <<
+  0.71*0.38*0.86*50*50*25,
+  0.37*0.92*0.86*50*50*25;
+  correct_ABC12_viterbi_idx <<
+  0,
+  0;
+  Eigen::MatrixXd correct_ABC21_viterbi(2,1);
+  Eigen::MatrixXi correct_ABC21_viterbi_idx(2,1);
+  correct_ABC21_viterbi <<
+  0.57*0.29*0.86*50*50*25,
+  0.72*0.97*0.28*50*50*25;
+  correct_ABC21_viterbi_idx <<
+  0,
+  1;
+  Eigen::MatrixXd correct_ABC22_viterbi(2,1);
+  Eigen::MatrixXi correct_ABC22_viterbi_idx(2,1);
+  correct_ABC22_viterbi <<
+  0.57*0.38*0.86*50*50*25,
+  0.72*0.92*0.86*50*50*25;
+  correct_ABC22_viterbi_idx <<
+  0,
+  0;
+  
+  IntVectorVector correct_ABC11_viterbi_paths = {{1,0}, {2,1}};
+  IntVectorVector correct_ABC12_viterbi_paths = {{1,0}, {2,0}};
+  IntVectorVector correct_ABC21_viterbi_paths = {{1,0}, {2,1}};
+  IntVectorVector correct_ABC22_viterbi_paths = {{1,0}, {2,0}};
+  std::vector<IntVectorVector> correct_ABC_viterbi_paths = {correct_ABC11_viterbi_paths,
+                                                            correct_ABC12_viterbi_paths,
+                                                            correct_ABC21_viterbi_paths,
+                                                            correct_ABC22_viterbi_paths};
+  
+  REQUIRE(chain.viterbi_paths() == correct_ABC_viterbi_paths);
+  REQUIRE(chain.smooshed()[0].viterbi(0).isApprox(correct_AB11_viterbi));
+  REQUIRE(chain.smooshed()[0].viterbi(1).isApprox(correct_AB12_viterbi));
+  REQUIRE(chain.smooshed()[0].viterbi(2).isApprox(correct_AB21_viterbi));
+  REQUIRE(chain.smooshed()[0].viterbi(3).isApprox(correct_AB22_viterbi));
+  REQUIRE(chain.smooshed().back().viterbi(0).isApprox(correct_ABC11_viterbi));
+  REQUIRE(chain.smooshed().back().viterbi(1).isApprox(correct_ABC12_viterbi));
+  REQUIRE(chain.smooshed().back().viterbi(2).isApprox(correct_ABC21_viterbi));
+  REQUIRE(chain.smooshed().back().viterbi(3).isApprox(correct_ABC22_viterbi));
+  
+  std::vector<std::string> correct_ABC_labels = {"0,0,0", "0,1,0", "1,0,0", "1,1,0"};
+  REQUIRE(chain.smooshed().front().labels() == correct_AB_labels);
+  REQUIRE(chain.smooshed().back().labels() == correct_ABC_labels);
 }
 
 

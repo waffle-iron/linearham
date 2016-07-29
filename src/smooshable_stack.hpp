@@ -21,8 +21,8 @@ class SmooshableStack {
     SmooshableStack(const SmooshableVector& smooshs);
     
     int size() const { return labels_.size(); };
-    int left_flex() const { return marginals_[1].rows(); };
-    int right_flex() const { return marginals_[1].cols(); };
+    int left_flex() const { return marginals_[0].rows(); };
+    int right_flex() const { return marginals_[0].cols(); };
     
     double scaler() const { return scaler_; };
     double& scaler() { return scaler_; };
@@ -36,6 +36,7 @@ class SmooshableStack {
     std::string label(int i) const { return labels_[i]; };
     std::string& label(int i) { return labels_[i]; };
     std::vector<std::string> labels() const { return labels_; };
+    std::vector<std::string>& labels() { return labels_; };
 };
 
 
