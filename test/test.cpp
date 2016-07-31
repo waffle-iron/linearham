@@ -61,6 +61,16 @@ TEST_CASE("SubProductMatrix", "[linalg]") {
 
   SubProductMatrix(e, A);
   REQUIRE(A == correct_A);
+  
+  Eigen::MatrixXd B(3,3);
+  A.setZero();
+  B.setConstant(100);
+  correct_A << 2.5*100, -2.5*100, -5*100,
+                 1*100,   -1*100, -2*100,
+                 1*100,    1*100,  2*100;
+  
+  SubProductMatrix(e, B, A);
+  REQUIRE(A == correct_A);
 }
 
 
