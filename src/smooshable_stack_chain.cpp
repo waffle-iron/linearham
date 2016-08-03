@@ -60,15 +60,13 @@ SmooshableStackChain::SmooshableStackChain(std::vector<SmooshableStack> original
         std::vector<std::string>::iterator it;
         
         for (int l = (smoosheds_.size() - 2); l >= 0; l--) {
-          
           it = std::find(smoosheds_[l].labels().begin(),
                          smoosheds_[l].labels().end(),
-                         smoosheds_[l+1].label(trace_idx).substr(0, 2*l+3));
+                         smoosheds_[l+1].labels()[trace_idx].substr(0, 2*l+3));
           trace_idx = it - smoosheds_[l].labels().begin();
           
           assert(path.front() < viterbi_idxs[l][trace_idx].cols());
           path.insert(path.begin(), viterbi_idxs[l][trace_idx](fs_i, path.front()));
-          
         }
         
         viterbi_paths_[k].push_back(std::move(path));
@@ -77,5 +75,4 @@ SmooshableStackChain::SmooshableStackChain(std::vector<SmooshableStack> original
     
   }
 };
-
 }

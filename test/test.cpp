@@ -61,16 +61,6 @@ TEST_CASE("SubProductMatrix", "[linalg]") {
 
   SubProductMatrix(e, A);
   REQUIRE(A == correct_A);
-  
-  Eigen::MatrixXd B(3,3);
-  A.setZero();
-  B.setConstant(100);
-  correct_A << 2.5*100, -2.5*100, -5*100,
-                 1*100,   -1*100, -2*100,
-                 1*100,    1*100,  2*100;
-  
-  SubProductMatrix(e, B, A);
-  REQUIRE(A == correct_A);
 }
 
 
@@ -286,9 +276,8 @@ TEST_CASE("SmooshableStack", "[smooshable_stack]") {
   A2 <<
   0.45, 0.57, 0.18,
   0.67, 0.15, 0.72;
-  double scaler_a = 50;
-  Smooshable s_A1 = Smooshable(A1, scaler_a);
-  Smooshable s_A2 = Smooshable(A2, scaler_a);
+  Smooshable s_A1 = Smooshable(A1);
+  Smooshable s_A2 = Smooshable(A2);
   SmooshableVector sv_A = {s_A1, s_A2};
   SmooshableStack ss_A(sv_A);
   
@@ -302,9 +291,8 @@ TEST_CASE("SmooshableStack", "[smooshable_stack]") {
   0.05, 0.10,
   0.38, 0.74,
   0.92, 0.19;
-  double scaler_b = 50;
-  Smooshable s_B1 = Smooshable(B1, scaler_b);
-  Smooshable s_B2 = Smooshable(B2, scaler_b);
+  Smooshable s_B1 = Smooshable(B1);
+  Smooshable s_B2 = Smooshable(B2);
   SmooshableVector sv_B = {s_B1, s_B2};
   SmooshableStack ss_B(sv_B);
   
@@ -313,34 +301,34 @@ TEST_CASE("SmooshableStack", "[smooshable_stack]") {
   Eigen::MatrixXd correct_AB21_marginal(2,2);
   Eigen::MatrixXd correct_AB22_marginal(2,2);
   correct_AB11_marginal <<
-  (0.5*0.3+0.71*0.29+0.13*0.11)*50*50 , (0.5*0.37+0.71*0.41+0.13*0.97)*50*50,
-  (0.29*0.3+0.31*0.29+0.37*0.11)*50*50, (0.29*0.37+0.31*0.41+0.37*0.97)*50*50;
+  (0.5*0.3+0.71*0.29+0.13*0.11) , (0.5*0.37+0.71*0.41+0.13*0.97),
+  (0.29*0.3+0.31*0.29+0.37*0.11), (0.29*0.37+0.31*0.41+0.37*0.97);
   correct_AB12_marginal <<
-  (0.5*0.05+0.71*0.38+0.13*0.92)*50*50 , (0.5*0.10+0.71*0.74+0.13*0.19)*50*50,
-  (0.29*0.05+0.31*0.38+0.37*0.92)*50*50, (0.29*0.10+0.31*0.74+0.37*0.19)*50*50;
+  (0.5*0.05+0.71*0.38+0.13*0.92) , (0.5*0.10+0.71*0.74+0.13*0.19),
+  (0.29*0.05+0.31*0.38+0.37*0.92), (0.29*0.10+0.31*0.74+0.37*0.19);
   correct_AB21_marginal <<
-  (0.45*0.3+0.57*0.29+0.18*0.11)*50*50, (0.45*0.37+0.57*0.41+0.18*0.97)*50*50,
-  (0.67*0.3+0.15*0.29+0.72*0.11)*50*50, (0.67*0.37+0.15*0.41+0.72*0.97)*50*50;
+  (0.45*0.3+0.57*0.29+0.18*0.11), (0.45*0.37+0.57*0.41+0.18*0.97),
+  (0.67*0.3+0.15*0.29+0.72*0.11), (0.67*0.37+0.15*0.41+0.72*0.97);
   correct_AB22_marginal <<
-  (0.45*0.05+0.57*0.38+0.18*0.92)*50*50, (0.45*0.10+0.57*0.74+0.18*0.19)*50*50,
-  (0.67*0.05+0.15*0.38+0.72*0.92)*50*50, (0.67*0.10+0.15*0.74+0.72*0.19)*50*50;
+  (0.45*0.05+0.57*0.38+0.18*0.92), (0.45*0.10+0.57*0.74+0.18*0.19),
+  (0.67*0.05+0.15*0.38+0.72*0.92), (0.67*0.10+0.15*0.74+0.72*0.19);
   
   Eigen::MatrixXd correct_AB11_viterbi(2,2);
   Eigen::MatrixXd correct_AB12_viterbi(2,2);
   Eigen::MatrixXd correct_AB21_viterbi(2,2);
   Eigen::MatrixXd correct_AB22_viterbi(2,2);
   correct_AB11_viterbi <<
-  (0.71*0.29)*50*50, (0.71*0.41)*50*50,
-  (0.31*0.29)*50*50, (0.37*0.97)*50*50;
+  (0.71*0.29), (0.71*0.41),
+  (0.31*0.29), (0.37*0.97);
   correct_AB12_viterbi <<
-  (0.71*0.38)*50*50, (0.71*0.74)*50*50,
-  (0.37*0.92)*50*50, (0.31*0.74)*50*50;
+  (0.71*0.38), (0.71*0.74),
+  (0.37*0.92), (0.31*0.74);
   correct_AB21_viterbi <<
-  (0.57*0.29)*50*50, (0.57*0.41)*50*50,
-  (0.67*0.3)*50*50 , (0.72*0.97)*50*50;
+  (0.57*0.29), (0.57*0.41),
+  (0.67*0.3) , (0.72*0.97);
   correct_AB22_viterbi <<
-  (0.57*0.38)*50*50, (0.57*0.74)*50*50,
-  (0.72*0.92)*50*50, (0.72*0.19)*50*50;
+  (0.57*0.38), (0.57*0.74),
+  (0.72*0.92), (0.72*0.19);
   
   Eigen::MatrixXi correct_AB11_viterbi_idx(2,2);
   Eigen::MatrixXi correct_AB12_viterbi_idx(2,2);
@@ -364,29 +352,29 @@ TEST_CASE("SmooshableStack", "[smooshable_stack]") {
                                                           correct_AB22_viterbi_idx};
   
   std::vector<std::string> correct_AB_labels = {"0,0", "0,1", "1,0", "1,1"};
+  std::vector<int> correct_AB_scaler_counts = {0, 0, 0, 0};
   
   SmooshableStack ss_AB;
   std::vector<Eigen::MatrixXi> AB_viterbi_idxs;
   std::tie(ss_AB, AB_viterbi_idxs) = SmooshStack(ss_A, ss_B);
   
   REQUIRE(ss_AB.labels() == correct_AB_labels);
-  REQUIRE(ss_AB.scaler() == 50*50);
-  REQUIRE(ss_AB.marginal(2*0+0).isApprox(correct_AB11_marginal));
-  REQUIRE(ss_AB.marginal(2*0+1).isApprox(correct_AB12_marginal));
-  REQUIRE(ss_AB.marginal(2*1+0).isApprox(correct_AB21_marginal));
-  REQUIRE(ss_AB.marginal(2*1+1).isApprox(correct_AB22_marginal));
-  REQUIRE(ss_AB.viterbi(2*0+0).isApprox(correct_AB11_viterbi));
-  REQUIRE(ss_AB.viterbi(2*0+1).isApprox(correct_AB12_viterbi));
-  REQUIRE(ss_AB.viterbi(2*1+0).isApprox(correct_AB21_viterbi));
-  REQUIRE(ss_AB.viterbi(2*1+1).isApprox(correct_AB22_viterbi));
+  REQUIRE(ss_AB.marginals()[2*0+0].isApprox(correct_AB11_marginal));
+  REQUIRE(ss_AB.marginals()[2*0+1].isApprox(correct_AB12_marginal));
+  REQUIRE(ss_AB.marginals()[2*1+0].isApprox(correct_AB21_marginal));
+  REQUIRE(ss_AB.marginals()[2*1+1].isApprox(correct_AB22_marginal));
+  REQUIRE(ss_AB.viterbis()[2*0+0].isApprox(correct_AB11_viterbi));
+  REQUIRE(ss_AB.viterbis()[2*0+1].isApprox(correct_AB12_viterbi));
+  REQUIRE(ss_AB.viterbis()[2*1+0].isApprox(correct_AB21_viterbi));
+  REQUIRE(ss_AB.viterbis()[2*1+1].isApprox(correct_AB22_viterbi));
   REQUIRE(AB_viterbi_idxs == correct_AB_viterbi_idxs);
+  REQUIRE(ss_AB.scaler_counts() == correct_AB_scaler_counts);
   
   Eigen::MatrixXd C1(2,1);
   C1 <<
   0.86,
   0.28;
-  double scaler_c = 25;
-  Smooshable s_C1 = Smooshable(C1, scaler_c);
+  Smooshable s_C1 = Smooshable(C1);
   SmooshableVector sv_C = {s_C1};
   SmooshableStack ss_C(sv_C);
   
@@ -396,32 +384,32 @@ TEST_CASE("SmooshableStack", "[smooshable_stack]") {
   Eigen::MatrixXd correct_ABC11_viterbi(2,1);
   Eigen::MatrixXi correct_ABC11_viterbi_idx(2,1);
   correct_ABC11_viterbi <<
-  0.71*0.29*0.86*50*50*25,
-  0.37*0.97*0.28*50*50*25;
+  0.71*0.29*0.86,
+  0.37*0.97*0.28;
   correct_ABC11_viterbi_idx <<
   0,
   1;
   Eigen::MatrixXd correct_ABC12_viterbi(2,1);
   Eigen::MatrixXi correct_ABC12_viterbi_idx(2,1);
   correct_ABC12_viterbi <<
-  0.71*0.38*0.86*50*50*25,
-  0.37*0.92*0.86*50*50*25;
+  0.71*0.38*0.86,
+  0.37*0.92*0.86;
   correct_ABC12_viterbi_idx <<
   0,
   0;
   Eigen::MatrixXd correct_ABC21_viterbi(2,1);
   Eigen::MatrixXi correct_ABC21_viterbi_idx(2,1);
   correct_ABC21_viterbi <<
-  0.57*0.29*0.86*50*50*25,
-  0.72*0.97*0.28*50*50*25;
+  0.57*0.29*0.86,
+  0.72*0.97*0.28;
   correct_ABC21_viterbi_idx <<
   0,
   1;
   Eigen::MatrixXd correct_ABC22_viterbi(2,1);
   Eigen::MatrixXi correct_ABC22_viterbi_idx(2,1);
   correct_ABC22_viterbi <<
-  0.57*0.38*0.86*50*50*25,
-  0.72*0.92*0.86*50*50*25;
+  0.57*0.38*0.86,
+  0.72*0.92*0.86;
   correct_ABC22_viterbi_idx <<
   0,
   0;
@@ -436,14 +424,14 @@ TEST_CASE("SmooshableStack", "[smooshable_stack]") {
                                                             correct_ABC22_viterbi_paths};
   
   REQUIRE(chain.viterbi_paths() == correct_ABC_viterbi_paths);
-  REQUIRE(chain.smooshed()[0].viterbi(0).isApprox(correct_AB11_viterbi));
-  REQUIRE(chain.smooshed()[0].viterbi(1).isApprox(correct_AB12_viterbi));
-  REQUIRE(chain.smooshed()[0].viterbi(2).isApprox(correct_AB21_viterbi));
-  REQUIRE(chain.smooshed()[0].viterbi(3).isApprox(correct_AB22_viterbi));
-  REQUIRE(chain.smooshed().back().viterbi(0).isApprox(correct_ABC11_viterbi));
-  REQUIRE(chain.smooshed().back().viterbi(1).isApprox(correct_ABC12_viterbi));
-  REQUIRE(chain.smooshed().back().viterbi(2).isApprox(correct_ABC21_viterbi));
-  REQUIRE(chain.smooshed().back().viterbi(3).isApprox(correct_ABC22_viterbi));
+  REQUIRE(chain.smooshed()[0].viterbis()[0].isApprox(correct_AB11_viterbi));
+  REQUIRE(chain.smooshed()[0].viterbis()[1].isApprox(correct_AB12_viterbi));
+  REQUIRE(chain.smooshed()[0].viterbis()[2].isApprox(correct_AB21_viterbi));
+  REQUIRE(chain.smooshed()[0].viterbis()[3].isApprox(correct_AB22_viterbi));
+  REQUIRE(chain.smooshed().back().viterbis()[0].isApprox(correct_ABC11_viterbi));
+  REQUIRE(chain.smooshed().back().viterbis()[1].isApprox(correct_ABC12_viterbi));
+  REQUIRE(chain.smooshed().back().viterbis()[2].isApprox(correct_ABC21_viterbi));
+  REQUIRE(chain.smooshed().back().viterbis()[3].isApprox(correct_ABC22_viterbi));
   
   std::vector<std::string> correct_ABC_labels = {"0,0,0", "0,1,0", "1,0,0", "1,1,0"};
   REQUIRE(chain.smooshed().front().labels() == correct_AB_labels);
