@@ -3,7 +3,7 @@
 
 /// @file smooshable_stack_chain.hpp
 /// @brief Headers for SmooshableStackChain class.
-
+/*
 namespace linearham {
 
 
@@ -32,4 +32,4 @@ class SmooshableStackChain {
 };
 
 }
-
+*/

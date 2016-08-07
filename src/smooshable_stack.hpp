@@ -9,37 +9,23 @@ namespace linearham {
 
 class SmooshableStack {
  protected:
-  std::vector<Eigen::MatrixXd> marginals_;
-  std::vector<Eigen::MatrixXd> viterbis_;
-  std::vector<int> scaler_counts_;
-  std::vector<std::string> labels_;
+  SmooshableVector smooshables_;
   
  public:
   SmooshableStack(){};
   SmooshableStack(int left_flex, int right_flex, int size);
-  SmooshableStack(const SmooshableVector& smooshs);
+  SmooshableStack(const SmooshableVector& smooshables);
   
-  int size() const { return marginals_.size(); };
-  int left_flex() const { return marginals_[0].rows(); };
-  int right_flex() const { return marginals_[0].cols(); };
+  int size() const { return smooshables_.size(); };
+  int left_flex() const { return smooshables_[0].marginal().rows(); };
+  int right_flex() const { return smooshables_[0].marginal().cols(); };
   
-  const std::vector<Eigen::MatrixXd> marginals() const { return marginals_; };
-  std::vector<Eigen::MatrixXd>& marginals() { return marginals_; };
-  
-  const std::vector<Eigen::MatrixXd> viterbis() const { return viterbis_; };
-  std::vector<Eigen::MatrixXd>& viterbis() { return viterbis_; };
-  
-  std::vector<int> scaler_counts() const { return scaler_counts_; };
-  std::vector<int>& scaler_counts() { return scaler_counts_; };
-  
-  std::vector<std::string> labels() const { return labels_; };
-  std::vector<std::string>& labels() { return labels_; };
+  SmooshableVector smooshables() const { return smooshables_; };
+  SmooshableVector& smooshables() { return smooshables_; };
 };
 
 
 /// @brief Smoosh two SmooshableStacks!
-std::pair<SmooshableStack, std::vector<Eigen::MatrixXi>> SmooshStack(const SmooshableStack& s_a,
-                                                                     const SmooshableStack& s_b);
-
-
+std::pair<SmooshableStack, std::vector<Eigen::MatrixXi>> Smoosh(const SmooshableStack& s_a,
+                                                                const SmooshableStack& s_b);
 }

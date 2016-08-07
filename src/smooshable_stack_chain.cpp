@@ -3,7 +3,7 @@
 
 /// @file smooshable_stack_chain.cpp
 /// @brief Implementation of SmooshableStackChain class.
-
+/*
 namespace linearham {
 
 
@@ -75,4 +75,4 @@ SmooshableStackChain::SmooshableStackChain(std::vector<SmooshableStack> original
     
   }
 };
-}
+}*/
