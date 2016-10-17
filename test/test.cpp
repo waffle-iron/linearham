@@ -398,11 +398,13 @@ TEST_CASE("YAML", "[io]") {
 
 
 TEST_CASE("CSV", "[io]") {
-  io::CSVReader<1, io::trim_chars<' '>, io::double_quote_escape<',','\"'> > in("data/sw-cache.csv");
+  io::CSVReader<1, io::trim_chars<' '>, io::double_quote_escape<',','\''> > in("data/sw-cache.csv");
   in.read_header(io::ignore_extra_column, "indelfos");
-  std::string indelfos;
-  while(in.read_row(indelfos)){
-    std::cout << indelfos << std::endl;
+  std::string indelfos_str;
+  while(in.read_row(indelfos_str)){
+    YAML::Node indelfos = YAML::Load(indelfos_str)[0];
+    REQUIRE(indelfos["reversed_seq"].IsDefined());
+    std::cout << "Here's the indel-reversed seq:\n" << indelfos["reversed_seq"].as<std::string>() << std::endl;
   }
 }
 }
