@@ -398,7 +398,7 @@ TEST_CASE("YAML", "[io]") {
 
 
 TEST_CASE("CSV", "[io]") {
-  io::CSVReader<1, io::double_quote_escape<',','\"'> > in("data/sw-cache.csv");
+  io::CSVReader<1, io::trim_chars<' '>, io::double_quote_escape<',','\"'> > in("data/sw-cache.csv");
   in.read_header(io::ignore_extra_column, "indelfos");
   std::string indelfos;
   while(in.read_row(indelfos)){
