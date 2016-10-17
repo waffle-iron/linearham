@@ -3,6 +3,7 @@
 
 #include "catch.hpp"
 #include "yaml.hpp"
+#include "csv.h"
 
 #include "core.hpp"
 #include "smooshable_chain.hpp"
@@ -396,4 +397,12 @@ TEST_CASE("YAML", "[io]") {
 }
 
 
+TEST_CASE("CSV", "[io]") {
+  io::CSVReader<1, io::double_quote_escape<',','\"'> > in("data/sw-cache.csv");
+  in.read_header(io::ignore_extra_column, "indelfos");
+  std::string indelfos;
+  while(in.read_row(indelfos)){
+    std::cout << indelfos << std::endl;
+  }
+}
 }
