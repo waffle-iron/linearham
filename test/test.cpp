@@ -3,7 +3,7 @@
 
 #include "catch.hpp"
 #include "yaml.hpp"
-#include "csv.h"
+#include "../lib/fast-cpp-csv-parser/csv.h"
 
 #include "core.hpp"
 #include "smooshable_chain.hpp"
@@ -401,11 +401,15 @@ TEST_CASE("CSV", "[io]") {
   io::CSVReader<3, io::trim_chars<>, io::double_quote_escape<' ','\"'> > in("data/hmm_input.csv");
   in.read_header(io::ignore_extra_column, "seqs", "boundsbounds", "relpos");
   std::string seq, boundsbounds_str, relpos_str;
-  while(in.read_row(seq, boundsbounds_str, relpos_str)){
-    YAML::Node boundsbounds = YAML::Load(boundsbounds_str);
-    YAML::Node relpos = YAML::Load(relpos_str);
-    // REQUIRE(indelfos["reversed_seq"].IsDefined());
-    // std::cout << "Here's the indel-reversed seq:\n" << indelfos["reversed_seq"].as<std::string>() << std::endl;
-  }
+  in.read_row(seq, boundsbounds_str, relpos_str);  // First line.
+  std::map<std::string, int> relpos_m = parse_string_int_map_yaml(relpos_str);
+  REQUIRE(relpos_m["IGHJ6*02"] == 333);
+  REQUIRE(relpos_m["IGHD2-15*01"] == 299);
+  in.read_row(seq, boundsbounds_str, relpos_str);  // Second line.
+  std::string correct_seq = "CAGGTGCAGCTGGTGCAGTCTGGGGCTGAGGTGAAGAAGCCTGGGGCCTCAGTGAAGGTCTCCTGCAAGGCTTCTGGATACACCTTCACCGGCTACTATATGCACTGGGTGCGACAGGCCCCTGGACAAGGGCTTGAGTGGATGGGATGGATCAACCCTAACAGTGGTGGCACAAACTATGCACAGAAGTTTCAGGGCTGGGTCACCATGACCAGGGACACGTCCATCAGCACAGCCTACATGGAGCTGAGCAGGCTGAGATCTGACGACACGGCCGTGTATTACTGTGCGAGAGATTTTTTATATTGTAGTGGTGGTAGCTGCTACTCCGGGGGGACTACTACTACTACGGTATGGACGTCTGGGGGCAAGGGACCACGGTCACCGTCTCCTCA";
+  REQUIRE(seq == correct_seq);
+  boundsbounds_map bb_map = parse_boundsbounds_yaml(boundsbounds_str);
+  REQUIRE(bb_map["v"].second == 296);
+  REQUIRE(bb_map["j"].first == 336);
 }
 }

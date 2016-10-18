@@ -211,4 +211,31 @@ std::unique_ptr<Germline> parse_germline_yaml(std::string yaml_path) {
 
   return outp;
 };
+
+
+std::map<std::string, int> parse_string_int_map_yaml(std::string s) {
+  std::map<std::string, int> m;
+  YAML::Node node = YAML::Load(s);
+
+  for(YAML::const_iterator it=node.begin(); it!=node.end(); ++it) {
+    m[it->first.as<std::string>()] = it->second.as<int>();
+  }
+
+  return m;
+}
+
+
+boundsbounds_map parse_boundsbounds_yaml(std::string boundsbounds_str) {
+  boundsbounds_map m;
+  YAML::Node node = YAML::Load(boundsbounds_str);
+
+  for(YAML::const_iterator it=node.begin(); it!=node.end(); ++it) {
+    YAML::Node node_pair = it->second;
+    m[it->first.as<std::string>()] =
+        std::make_pair(node_pair[0].as<int>(), node_pair[1].as<int>());
+  }
+
+  return m;
+}
+
 }
