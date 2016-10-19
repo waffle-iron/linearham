@@ -342,17 +342,17 @@ TEST_CASE("YAML", "[io]") {
   0.07, 0.7, 0.01, 0.15, 0.125;
   Eigen::VectorXd V_next_transition(4);
   V_next_transition << 1, 1, 0.8, 0.5;
-  
+
   Germline correct_V_germline(V_landing, V_emission_matrix, V_next_transition);
   std::unique_ptr<Germline> V_germline = parse_germline_yaml("data/V_germline_ex.yaml");
-  
+
   REQUIRE(V_germline->emission_matrix() == correct_V_germline.emission_matrix());
   REQUIRE(V_germline->transition() == correct_V_germline.transition());
   REQUIRE(V_germline->n_landing_in().isZero());
   REQUIRE(V_germline->n_landing_out().isZero());
   REQUIRE(V_germline->n_emission_matrix().isZero());
   REQUIRE(V_germline->n_transition().isZero());
-  
+
   Eigen::VectorXd D_landing(5);
   D_landing << 0.4, 0.1, 0.05, 0, 0;
   Eigen::MatrixXd D_emission_matrix(4,5);
@@ -383,11 +383,11 @@ TEST_CASE("YAML", "[io]") {
   0.075, 0.175, 0.05, 0.025,
   0.075, 0.175, 0.05, 0.025,
   0.075, 0.175, 0.05, 0.025;
-  
+
   NGermline correct_D_germline(D_landing, D_emission_matrix, D_next_transition,
                                D_n_landing_in, D_n_landing_out, D_n_emission_matrix, D_n_transition);
   std::unique_ptr<Germline> D_germline = parse_germline_yaml("data/D_germline_ex.yaml");
-  
+
   REQUIRE(D_germline->emission_matrix() == correct_D_germline.emission_matrix());
   REQUIRE(D_germline->transition() == correct_D_germline.transition());
   REQUIRE(D_germline->n_landing_in() == correct_D_germline.n_landing_in());
@@ -402,13 +402,15 @@ TEST_CASE("CSV", "[io]") {
   in.read_header(io::ignore_extra_column, "seqs", "boundsbounds", "relpos");
   std::string seq, boundsbounds_str, relpos_str;
   in.read_row(seq, boundsbounds_str, relpos_str);  // First line.
-  std::map<std::string, int> relpos_m = parse_string_int_map_yaml(relpos_str);
+  std::map<std::string, int> relpos_m =
+    YAML::Load(relpos_str).as<std::map<std::string, int>>();
   REQUIRE(relpos_m["IGHJ6*02"] == 333);
   REQUIRE(relpos_m["IGHD2-15*01"] == 299);
   in.read_row(seq, boundsbounds_str, relpos_str);  // Second line.
   std::string correct_seq = "CAGGTGCAGCTGGTGCAGTCTGGGGCTGAGGTGAAGAAGCCTGGGGCCTCAGTGAAGGTCTCCTGCAAGGCTTCTGGATACACCTTCACCGGCTACTATATGCACTGGGTGCGACAGGCCCCTGGACAAGGGCTTGAGTGGATGGGATGGATCAACCCTAACAGTGGTGGCACAAACTATGCACAGAAGTTTCAGGGCTGGGTCACCATGACCAGGGACACGTCCATCAGCACAGCCTACATGGAGCTGAGCAGGCTGAGATCTGACGACACGGCCGTGTATTACTGTGCGAGAGATTTTTTATATTGTAGTGGTGGTAGCTGCTACTCCGGGGGGACTACTACTACTACGGTATGGACGTCTGGGGGCAAGGGACCACGGTCACCGTCTCCTCA";
   REQUIRE(seq == correct_seq);
-  boundsbounds_map bb_map = parse_boundsbounds_yaml(boundsbounds_str);
+  std::map<std::string, std::pair<int, int>> bb_map =
+    YAML::Load(boundsbounds_str).as<std::map<std::string, std::pair<int, int>>>();
   REQUIRE(bb_map["v"].second == 296);
   REQUIRE(bb_map["j"].first == 336);
 }
