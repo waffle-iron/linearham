@@ -411,7 +411,7 @@ TEST_CASE("CSV", "[io]") {
   REQUIRE(seq == correct_seq);
   std::map<std::string, std::pair<int, int>> bb_map =
     YAML::Load(boundsbounds_str).as<std::map<std::string, std::pair<int, int>>>();
-  REQUIRE(bb_map["v"].second == 296);
-  REQUIRE(bb_map["j"].first == 336);
+  REQUIRE(bb_map["v_l"].second == 2);
+  REQUIRE(bb_map["d_r"].first == 328);
 }
 }
