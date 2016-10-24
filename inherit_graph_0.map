@@ -1,0 +1,8 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classlinearham_1_1Germline.html" title="The HMM representation of a germline gene, without reference to any reads. " alt="" coords="13,56,165,83"/>
+<area shape="rect" id="node2" href="$classlinearham_1_1DGermline.html" title="An abstraction used to represent a D germline gene. " alt="" coords="220,5,383,32"/>
+<area shape="rect" id="node3" href="$classlinearham_1_1JGermline.html" title="An abstraction used to represent a J germline gene. " alt="" coords="224,56,379,83"/>
+<area shape="rect" id="node4" href="$classlinearham_1_1VGermline.html" title="An abstraction used to represent a V germline gene. " alt="" coords="221,107,382,133"/>
+<area shape="rect" id="node5" href="$classlinearham_1_1NPadding.html" title="An abstraction used to represent the padded germline states on the left (right) of V (J) genes..." alt="" coords="11,107,166,133"/>
+<area shape="rect" id="node6" href="$classlinearham_1_1NTInsertion.html" title="An abstraction used to represent the non&#45;templated insertion (NTI) regions. " alt="" coords="5,5,172,32"/>
+</map>

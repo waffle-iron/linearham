@@ -1,0 +1,5 @@
+<map id="linearham::JGermline" name="linearham::JGermline">
+<area shape="rect" id="node2" href="$classlinearham_1_1Germline.html" title="The HMM representation of a germline gene, without reference to any reads. " alt="" coords="5,5,157,32"/>
+<area shape="rect" id="node3" href="$classlinearham_1_1NTInsertion.html" title="An abstraction used to represent the non&#45;templated insertion (NTI) regions. " alt="" coords="182,5,349,32"/>
+<area shape="rect" id="node4" href="$classlinearham_1_1NPadding.html" title="An abstraction used to represent the padded germline states on the left (right) of V (J) genes..." alt="" coords="373,5,528,32"/>
+</map>
