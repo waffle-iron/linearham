@@ -26,6 +26,11 @@ class NTInsertion {
   Eigen::MatrixXd n_landing_out() const { return n_landing_out_; };
   Eigen::MatrixXd n_emission_matrix() const { return n_emission_matrix_; };
   Eigen::MatrixXd n_transition() const { return n_transition_; };
+
+  Eigen::MatrixXd nti_prob_matrix(std::pair<int, int> left_flex_ind,
+                                  std::pair<int, int> right_flex_ind,
+                                  Eigen::Ref<Eigen::VectorXi> emission_indices,
+                                  int right_relpos);
 };
 }
 

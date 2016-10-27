@@ -464,6 +464,19 @@ TEST_CASE("YAML", "[io]") {
   REQUIRE(J_Germ.n_transition() == J_n_transition);
   REQUIRE(J_Germ.n_self_transition_prob() == J_n_self_transition_prob);
   REQUIRE(J_Germ.n_emission_vector() == J_n_emission_vector);
+
+  // Testing the NTI probability matrix calculation.
+  std::pair<int, int> left_flex_ind = std::make_pair(3, 5);
+  std::pair<int, int> right_flex_ind = std::make_pair(6, 9);
+  Eigen::VectorXi emission_indices(13);
+  emission_indices << 0, 1, 0, 2, 3, 0, 1, 1, 1, 3, 2, 3, 3;
+  int right_relpos = 5;
+  Eigen::MatrixXd true_nti_prob_matrix(2,3);
+  true_nti_prob_matrix <<
+  0.000726562, 7.99219e-05, 0,
+  0.013125   ,  0.00144375, 0;
+  REQUIRE(D_Germ.nti_prob_matrix(left_flex_ind, right_flex_ind,
+                                 emission_indices, right_relpos).isApprox(true_nti_prob_matrix, 1e-5));
 }
 
 

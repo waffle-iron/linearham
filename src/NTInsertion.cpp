@@ -90,4 +90,43 @@ NTInsertion::NTInsertion(YAML::Node root) {
     }
   }
 };
+
+
+Eigen::MatrixXd NTInsertion::nti_prob_matrix(std::pair<int, int> left_flex_ind,
+                                             std::pair<int, int> right_flex_ind,
+                                             Eigen::Ref<Eigen::VectorXi> emission_indices,
+                                             int right_relpos) {
+  assert(left_flex_ind.second > left_flex_ind.first);
+  assert(right_flex_ind.second > right_flex_ind.first);
+  assert(right_flex_ind.second > left_flex_ind.first);
+
+  int g_ll, g_lr, g_rl, g_rr;
+  g_ll = left_flex_ind.first;
+  g_lr = left_flex_ind.second;
+  g_rl = right_flex_ind.first;
+  g_rr = right_flex_ind.second;
+  Eigen::MatrixXd cache_mat = Eigen::MatrixXd::Zero(g_lr - g_ll, n_transition_.cols());
+  Eigen::MatrixXd outp(g_lr - g_ll, g_rr - g_rl);
+
+  // looping from left to right
+  for (int i = g_ll + 1; i < g_rr - 1; i++) {
+    // left flex computations
+    if (i <= g_lr) {
+      if (i != (g_ll + 1)) cache_mat.topRows(i - (g_ll + 1)) *= n_transition_;
+      cache_mat.row(i - (g_ll + 1)) = n_landing_in_;
+      RowVecMatCwise(n_emission_matrix_.row(emission_indices[i]),
+                     cache_mat.topRows(i - g_ll), cache_mat.topRows(i - g_ll));
+    } else {
+      // non-flex & right flex computations
+      cache_mat *= n_transition_;
+      RowVecMatCwise(n_emission_matrix_.row(emission_indices[i]),
+                     cache_mat, cache_mat);
+    }
+
+    // storing final probabilities in output matrix
+    if (i >= g_rl - 1) outp.col(i - (g_rl - 1)) = cache_mat * n_landing_out_.col(i + 1 - right_relpos);
+  }
+
+  return outp;
+};
 }
