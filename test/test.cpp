@@ -477,6 +477,11 @@ TEST_CASE("YAML", "[io]") {
   0.013125   ,  0.00144375, 0;
   REQUIRE(D_Germ.nti_prob_matrix(left_flex_ind, right_flex_ind,
                                  emission_indices, right_relpos).isApprox(true_nti_prob_matrix, 1e-5));
+
+  // Testing the Germline probability matrix calculation.
+  int relpos = 2;
+  std::cout << D_Germ.germline_prob_matrix(left_flex_ind, right_flex_ind,
+                                           emission_indices, relpos) << "\n";
 }
 
 

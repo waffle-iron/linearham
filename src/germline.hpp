@@ -35,6 +35,11 @@ class Germline {
                    const Eigen::Ref<const Eigen::VectorXi>& emission_indices,
                    int left_flex, int right_flex,
                    Eigen::Ref<Eigen::MatrixXd> match);
+
+  Eigen::MatrixXd germline_prob_matrix(std::pair<int, int> left_flex_ind,
+                                       std::pair<int, int> right_flex_ind,
+                                       Eigen::Ref<Eigen::VectorXi> emission_indices,
+                                       int relpos);
 };
 }
 

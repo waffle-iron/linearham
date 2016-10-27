@@ -182,4 +182,46 @@ void Germline::MatchMatrix(
   match = fullMatch.block(0, length - right_flex - 1, left_flex + 1,
                           right_flex + 1);
 };
+
+
+Eigen::MatrixXd Germline::germline_prob_matrix(std::pair<int, int> left_flex_ind,
+                                               std::pair<int, int> right_flex_ind,
+                                               Eigen::Ref<Eigen::VectorXi> emission_indices,
+                                               int relpos) {
+  assert(left_flex_ind.second > left_flex_ind.first);
+  assert(right_flex_ind.second > right_flex_ind.first);
+  assert(right_flex_ind.first > left_flex_ind.second);
+
+  int g_ll, g_lr, g_rl, g_rr;
+  g_ll = left_flex_ind.first;
+  g_lr = left_flex_ind.second;
+  g_rl = right_flex_ind.first;
+  g_rr = right_flex_ind.second;
+  Eigen::MatrixXd outp = Eigen::MatrixXd::Zero(g_lr - g_ll, g_rr - g_rl);
+
+  // determining the output matrix block that will hold the germline match matrix
+  int row_length, col_length;
+
+  if (relpos > g_ll) {
+    row_length = g_lr - relpos;
+  } else {
+    row_length = g_lr - g_ll;
+  }
+  int read_start = std::max(relpos, g_ll);
+
+  if (relpos + this->length() < g_rr) {
+    col_length = relpos + this->length() - g_rl;
+  } else {
+    col_length = g_rr - g_rl;
+  }
+  int read_end = std::min(relpos + this->length(), g_rr);
+
+  // computing the germline match probability matrix
+  MatchMatrix(read_start - relpos,
+              emission_indices.segment(read_start, read_end - read_start),
+              row_length - 1, col_length - 1,
+              outp.bottomLeftCorner(row_length, col_length));
+
+  return outp;
+};
 }

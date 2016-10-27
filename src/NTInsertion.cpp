@@ -98,7 +98,7 @@ Eigen::MatrixXd NTInsertion::nti_prob_matrix(std::pair<int, int> left_flex_ind,
                                              int right_relpos) {
   assert(left_flex_ind.second > left_flex_ind.first);
   assert(right_flex_ind.second > right_flex_ind.first);
-  assert(right_flex_ind.second > left_flex_ind.first);
+  assert(right_flex_ind.first > left_flex_ind.first);
 
   int g_ll, g_lr, g_rl, g_rr;
   g_ll = left_flex_ind.first;
