@@ -92,6 +92,17 @@ NTInsertion::NTInsertion(YAML::Node root) {
 };
 
 
+/// @brief Creates the matrix with the probabilities of non-templated insertions to
+/// the left of a given D or J gene.
+/// @param[in] left_flex_ind
+/// A 2-tuple of read positions providing the right flex bounds of the germline on the left.
+/// @param[in] right_flex_ind
+/// A 2-tuple of read positions providing the left flex bounds of the germline on the right.
+/// @param[in] emission_indices
+/// A vector of indices giving the observed read nucleotides.
+/// @param[in] right_relpos
+/// The read position corresponding to the first position of the germline gene to the right
+/// of the NTI region.
 Eigen::MatrixXd NTInsertion::nti_prob_matrix(std::pair<int, int> left_flex_ind,
                                              std::pair<int, int> right_flex_ind,
                                              Eigen::Ref<Eigen::VectorXi> emission_indices,

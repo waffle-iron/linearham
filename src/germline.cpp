@@ -184,6 +184,19 @@ void Germline::MatchMatrix(
 };
 
 
+/// @brief Creates the matrix with the probabilities of various germline linear matches.
+/// @param[in] left_flex_ind
+/// A 2-tuple of read positions providing the bounds of the germline's left flex region.
+/// @param[in] right_flex_ind
+/// A 2-tuple of read positions providing the bounds of the germline's right flex region.
+/// @param[in] emission_indices
+/// A vector of indices giving the observed read nucleotides.
+/// @param[in] relpos
+/// The read position corresponding to the first position of the germline gene.
+///
+/// This function uses `MatchMatrix` to build the match matrix for the relevant part of
+/// the germline gene and then pads the remaining unaligned read positions by filling the
+/// match matrix with zeroes.
 Eigen::MatrixXd Germline::germline_prob_matrix(std::pair<int, int> left_flex_ind,
                                                std::pair<int, int> right_flex_ind,
                                                Eigen::Ref<Eigen::VectorXi> emission_indices,
