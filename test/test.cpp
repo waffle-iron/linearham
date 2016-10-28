@@ -6,9 +6,8 @@
 #include "../lib/fast-cpp-csv-parser/csv.h"
 
 
-namespace linearham {
-Eigen::VectorXi emission_indices(13);
-emission_indices << 0, 1, 0, 2, 3, 0, 1, 1, 1, 3, 2, 3, 3;
+namespace test {
+using namespace linearham;
 
 
 // Linear algebra tests
@@ -309,7 +308,14 @@ TEST_CASE("Ham Comparison 1", "[ham]") {
 }
 
 
-// IO tests
+// YAML comparison tests
+// Here are a block of tests that parse ham YAML files and evaluate using those parameters.
+Eigen::VectorXi emission_indices(13);
+
+void initialize_yaml_shared() {
+    emission_indices << 0, 1, 0, 2, 3, 0, 1, 1, 1, 3, 2, 3, 3;
+}
+
 
 TEST_CASE("YAML", "[io]") {
   Eigen::VectorXd V_landing(5);
@@ -468,10 +474,9 @@ TEST_CASE("YAML", "[io]") {
   REQUIRE(J_Germ.n_emission_vector() == J_n_emission_vector);
 
   // Testing the NTI probability matrix calculation.
+  initialize_yaml_shared();
   std::pair<int, int> left_flex_ind = std::make_pair(3, 5);
   std::pair<int, int> right_flex_ind = std::make_pair(6, 9);
-  Eigen::VectorXi emission_indices(13);
-  emission_indices << 0, 1, 0, 2, 3, 0, 1, 1, 1, 3, 2, 3, 3;
   int right_relpos = 5;
   Eigen::MatrixXd true_nti_prob_matrix(2,3);
   true_nti_prob_matrix <<
