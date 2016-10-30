@@ -44,17 +44,17 @@ std::pair<std::vector<std::string>, Eigen::VectorXd> parse_string_prob_map(
     YAML::Node node) {
   assert(node.IsMap());
   std::vector<std::string> state_names(node.size());
-  Eigen::VectorXd transition_probs(node.size());
+  Eigen::VectorXd probs(node.size());
   int i = 0;
 
   for (YAML::const_iterator it = node.begin(); it != node.end(); it++) {
     state_names[i] = it->first.as<std::string>();
-    transition_probs[i] = it->second.as<double>();
+    probs[i] = it->second.as<double>();
     i++;
   }
 
-  assert(fabs(transition_probs.sum() - 1) <= EPS_PARSE);
-  return std::make_pair(state_names, transition_probs);
+  assert(fabs(probs.sum() - 1) <= EPS_PARSE);
+  return std::make_pair(state_names, probs);
 };
 
 

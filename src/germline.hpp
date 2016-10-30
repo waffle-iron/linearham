@@ -13,20 +13,10 @@ namespace linearham {
 /// reads.
 class Germline {
  protected:
+  Eigen::VectorXd landing_;
   Eigen::MatrixXd emission_matrix_;
   Eigen::MatrixXd transition_;
   double gene_prob_;
-
- public:
-  Germline(){};
-  Germline(Eigen::VectorXd& landing, Eigen::MatrixXd& emission_matrix,
-           Eigen::VectorXd& next_transition);
-  Germline(YAML::Node root);
-
-  Eigen::MatrixXd emission_matrix() const { return emission_matrix_; };
-  Eigen::MatrixXd transition() const { return transition_; };
-  double gene_prob() const { return gene_prob_; };
-  int length() const { return transition_.cols(); };
 
   void EmissionVector(const Eigen::Ref<const Eigen::VectorXi>& emission_indices,
                       int start, Eigen::Ref<Eigen::VectorXd> emission);
@@ -36,8 +26,18 @@ class Germline {
                    int left_flex, int right_flex,
                    Eigen::Ref<Eigen::MatrixXd> match);
 
-  Eigen::MatrixXd germline_prob_matrix(std::pair<int, int> left_flex_ind,
-                                       std::pair<int, int> right_flex_ind,
+ public:
+  Germline(){};
+  Germline(YAML::Node root);
+
+  Eigen::VectorXd landing() const { return landing_; };
+  Eigen::MatrixXd emission_matrix() const { return emission_matrix_; };
+  Eigen::MatrixXd transition() const { return transition_; };
+  double gene_prob() const { return gene_prob_; };
+  int length() const { return transition_.cols(); };
+
+  Eigen::MatrixXd germline_prob_matrix(std::pair<int, int> left_flexbounds,
+                                       std::pair<int, int> right_flexbounds,
                                        Eigen::Ref<Eigen::VectorXi> emission_indices,
                                        int relpos);
 };
