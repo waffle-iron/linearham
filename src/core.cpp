@@ -12,7 +12,8 @@ namespace linearham {
 /// @param[in] next_transition
 /// Vector of probabilities of transitioning to the next match state.
 /// @return
-/// Matrix of match probabilities just in terms of the transitions.
+/// Matrix of match probabilities just in terms of the transitions in
+/// and along a segment.
 ///
 /// If next_transition is of length \f$\ell-1\f$, then make an \f$\ell \times
 /// \ell\f$
@@ -22,7 +23,7 @@ namespace linearham {
 /// M_{i,j} := (1-a_j) \prod_{k=i}^{j-1} a_k
 /// \f]
 /// is the cumulative transition probability of having a match start at i and
-/// end at j.
+/// end at j, ignoring the transition into the match.
 Eigen::MatrixXd BuildTransition(Eigen::VectorXd& next_transition) {
   int ell = next_transition.size() + 1;
   Eigen::MatrixXd transition(ell, ell);

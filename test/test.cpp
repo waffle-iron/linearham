@@ -6,7 +6,9 @@
 #include "../lib/fast-cpp-csv-parser/csv.h"
 
 
-namespace linearham {
+namespace test {
+
+using namespace linearham;
 
 // Global test variables
 
@@ -189,15 +191,15 @@ TEST_CASE("Germline", "[germline]") {
   int V_relpos = 4;
   std::pair<int, int> V_left_flexbounds = std::make_pair(3, 5);
   std::pair<int, int> V_right_flexbounds = std::make_pair(7, 10);
-  Eigen::MatrixXd V_germline_prob_matrix(3,4);
-  V_germline_prob_matrix <<
+  Eigen::MatrixXd V_GermlineProbMatrix(3,4);
+  V_GermlineProbMatrix <<
   // Format is emission * transition * ... * fall_off
   0*0*0.07*1*0.1*1*0.01*0.2, 0*0*0.07*1*0.1*1*0.01*0.8*0.15*0.5, 0*0*0.07*1*0.1*1*0.01*0.8*0.15*0.5*0.625, 0*0*0.07*1*0.1*1*0.01*0.8*0.15*0.5*0.625*0*0,
       0.07*1*0.1*1*0.01*0.2,     0.07*1*0.1*1*0.01*0.8*0.15*0.5,     0.07*1*0.1*1*0.01*0.8*0.15*0.5*0.625,     0.07*1*0.1*1*0.01*0.8*0.15*0.5*0.625*0*0,
              0.1*1*0.01*0.2,            0.1*1*0.01*0.8*0.15*0.5,            0.1*1*0.01*0.8*0.15*0.5*0.625,            0.1*1*0.01*0.8*0.15*0.5*0.625*0*0;
 
-  REQUIRE(V_Germline.germline_prob_matrix(V_left_flexbounds, V_right_flexbounds,
-                                          emission_indices, V_relpos).isApprox(V_germline_prob_matrix));
+  REQUIRE(V_Germline.GermlineProbMatrix(V_left_flexbounds, V_right_flexbounds,
+                                        emission_indices, V_relpos).isApprox(V_GermlineProbMatrix));
 
   // D tests
   Eigen::VectorXd D_landing(5);
@@ -229,15 +231,15 @@ TEST_CASE("Germline", "[germline]") {
   int D_relpos = 2;
   std::pair<int, int> D_left_flexbounds = std::make_pair(3, 5);
   std::pair<int, int> D_right_flexbounds = std::make_pair(5, 7);
-  Eigen::MatrixXd D_germline_prob_matrix(3,3);
-  D_germline_prob_matrix <<
+  Eigen::MatrixXd D_GermlineProbMatrix(3,3);
+  D_GermlineProbMatrix <<
   // Format is emission * transition * ... * fall_off
   0.79*0.95*0.85*0.4, 0.79*0.95*0.85*0.6*0.55*0.65, 0.79*0.95*0.85*0.6*0.55*0.35*0.97,
             0.85*0.4,           0.85*0.6*0.55*0.65,           0.85*0.6*0.55*0.35*0.97,
                    0,                    0.55*0.65,                    0.55*0.35*0.97;
 
-  REQUIRE(D_Germline.germline_prob_matrix(D_left_flexbounds, D_right_flexbounds,
-                                          emission_indices, D_relpos).isApprox(D_germline_prob_matrix));
+  REQUIRE(D_Germline.GermlineProbMatrix(D_left_flexbounds, D_right_flexbounds,
+                                        emission_indices, D_relpos).isApprox(D_GermlineProbMatrix));
 
   // J tests
   Eigen::VectorXd J_landing(5);
@@ -269,14 +271,14 @@ TEST_CASE("Germline", "[germline]") {
   int J_relpos = 8;
   std::pair<int, int> J_left_flexbounds = std::make_pair(8, 9);
   std::pair<int, int> J_right_flexbounds = std::make_pair(12, 13);
-  Eigen::MatrixXd J_germline_prob_matrix(2,2);
-  J_germline_prob_matrix <<
+  Eigen::MatrixXd J_GermlineProbMatrix(2,2);
+  J_GermlineProbMatrix <<
   // Format is emission * transition * ... * fall_off
   0.03*1*0.7*1*0.82*1*0.01*0, 0.03*1*0.7*1*0.82*1*0.01*1*0.08*1,
          0.7*1*0.82*1*0.01*0,        0.7*1*0.82*1*0.01*1*0.08*1;
 
-  REQUIRE(J_Germline.germline_prob_matrix(J_left_flexbounds, J_right_flexbounds,
-                                          emission_indices, J_relpos).isApprox(J_germline_prob_matrix));
+  REQUIRE(J_Germline.GermlineProbMatrix(J_left_flexbounds, J_right_flexbounds,
+                                        emission_indices, J_relpos).isApprox(J_GermlineProbMatrix));
 }
 
 
@@ -320,13 +322,13 @@ TEST_CASE("NTInsertion", "[insertion]") {
   int D_right_relpos = 5;
   std::pair<int, int> D_left_flexbounds = std::make_pair(4, 5);
   std::pair<int, int> D_right_flexbounds = std::make_pair(6, 8);
-  Eigen::MatrixXd D_nti_prob_matrix(2,3);
-  D_nti_prob_matrix <<
+  Eigen::MatrixXd D_NTIProbMatrix(2,3);
+  D_NTIProbMatrix <<
   0.000726562, 7.99219e-05, 0,
      0.013125,  0.00144375, 0;
 
-  REQUIRE(D_NTInsertion.nti_prob_matrix(D_left_flexbounds, D_right_flexbounds,
-                                        emission_indices, D_right_relpos).isApprox(D_nti_prob_matrix, 1e-5));
+  REQUIRE(D_NTInsertion.NTIProbMatrix(D_left_flexbounds, D_right_flexbounds,
+                                      emission_indices, D_right_relpos).isApprox(D_NTIProbMatrix, 1e-5));
 
   // J tests
   Eigen::VectorXd J_n_landing_in(4);
@@ -360,14 +362,14 @@ TEST_CASE("NTInsertion", "[insertion]") {
   int J_right_relpos = 2;
   std::pair<int, int> J_left_flexbounds = std::make_pair(1, 3);
   std::pair<int, int> J_right_flexbounds = std::make_pair(2, 4);
-  Eigen::MatrixXd J_nti_prob_matrix(3,3);
-  J_nti_prob_matrix <<
+  Eigen::MatrixXd J_NTIProbMatrix(3,3);
+  J_NTIProbMatrix <<
   0.0792, 0.0026235, 0,
        0,    0.0265, 0,
        0,         0, 0;
 
-  REQUIRE(J_NTInsertion.nti_prob_matrix(J_left_flexbounds, J_right_flexbounds,
-                                        emission_indices, J_right_relpos).isApprox(J_nti_prob_matrix));
+  REQUIRE(J_NTInsertion.NTIProbMatrix(J_left_flexbounds, J_right_flexbounds,
+                                      emission_indices, J_right_relpos).isApprox(J_NTIProbMatrix));
 }
 
 
@@ -671,8 +673,8 @@ TEST_CASE("NTInsertion", "[insertion]") {
 
 //  // Testing the Germline probability matrix calculation.
 //  int relpos = 2;
-//  std::cout << D_Germ.germline_prob_matrix(left_flex_ind, right_flex_ind,
-//                                           emission_indices, relpos) << "\n";
+//  std::cout << D_Germ.GermlineProbMatrix(left_flex_ind, right_flex_ind,
+//                                         emission_indices, relpos) << "\n";
 //}
 
 

@@ -6,7 +6,6 @@
 namespace linearham {
 
 
-
 /// @brief Constructor for Germline starting from a YAML file.
 /// @param[in] root
 /// A root node associated with a germline YAML file.
@@ -181,10 +180,10 @@ void Germline::MatchMatrix(
 /// This function uses `MatchMatrix` to build the match matrix for the relevant part of
 /// the germline gene and then pads the remaining flex positions without germline states
 /// by filling the match matrix with zeroes.
-Eigen::MatrixXd Germline::germline_prob_matrix(std::pair<int, int> left_flexbounds,
-                                               std::pair<int, int> right_flexbounds,
-                                               Eigen::Ref<Eigen::VectorXi> emission_indices,
-                                               int relpos) {
+Eigen::MatrixXd Germline::GermlineProbMatrix(std::pair<int, int> left_flexbounds,
+                                             std::pair<int, int> right_flexbounds,
+                                             Eigen::Ref<Eigen::VectorXi> emission_indices,
+                                             int relpos) {
   assert(left_flexbounds.second >= left_flexbounds.first);
   assert(right_flexbounds.second >= right_flexbounds.first);
   assert(right_flexbounds.first >= left_flexbounds.first + 1);
@@ -199,19 +198,19 @@ Eigen::MatrixXd Germline::germline_prob_matrix(std::pair<int, int> left_flexboun
   Eigen::MatrixXd outp = Eigen::MatrixXd::Zero(g_lr - g_ll + 1, g_rr - g_rl + 1);
 
   // determining the output matrix block that will hold the germline match matrix
-  int row_length, col_length;
+  int left_flex, right_flex;
 
   int read_start = std::max(relpos, g_ll);
-  row_length = g_lr - read_start + 1;
+  left_flex = g_lr - read_start;
 
   int read_end = std::min(relpos + this->length(), g_rr);
-  col_length = read_end - g_rl + 1;
+  right_flex = read_end - g_rl;
 
   // computing the germline match probability matrix
   MatchMatrix(read_start - relpos,
               emission_indices.segment(read_start, read_end - read_start),
-              row_length - 1, col_length - 1,
-              outp.bottomLeftCorner(row_length, col_length));
+              left_flex, right_flex,
+              outp.bottomLeftCorner(left_flex + 1, right_flex + 1));
 
   return outp;
 };
