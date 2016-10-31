@@ -36,10 +36,9 @@ class Germline {
   double gene_prob() const { return gene_prob_; };
   int length() const { return transition_.cols(); };
 
-  Eigen::MatrixXd GermlineProbMatrix(std::pair<int, int> left_flexbounds,
-                                     std::pair<int, int> right_flexbounds,
-                                     Eigen::Ref<Eigen::VectorXi> emission_indices,
-                                     int relpos);
+  Eigen::MatrixXd GermlineProbMatrix(
+      std::pair<int, int> left_flexbounds, std::pair<int, int> right_flexbounds,
+      Eigen::Ref<Eigen::VectorXi> emission_indices, int relpos);
 };
 }
 

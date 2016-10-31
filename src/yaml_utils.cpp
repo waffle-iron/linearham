@@ -28,7 +28,7 @@ YAML::Node GetYAMLRoot(std::string yaml_path) {
 /// @return
 /// If it is.
 bool IsEqualStringVecs(std::vector<std::string> vec1,
-                          std::vector<std::string> vec2) {
+                       std::vector<std::string> vec2) {
   assert(std::is_sorted(vec2.begin(), vec2.end()));
   std::sort(vec1.begin(), vec1.end());
   return vec1 == vec2;
@@ -84,8 +84,8 @@ GetAlphabet(YAML::Node root) {
 /// The alphabet.
 /// @return
 /// A 2-tuple containing the regex's.
-std::pair<std::regex, std::regex> GetStateRegex(std::string gname,
-                                            std::vector<std::string> alphabet) {
+std::pair<std::regex, std::regex> GetStateRegex(
+    std::string gname, std::vector<std::string> alphabet) {
   std::regex grgx("^" + gname + "_([0-9]+)$");
   std::regex nrgx(
       "^insert_left_([" +
@@ -103,8 +103,7 @@ std::pair<std::regex, std::regex> GetStateRegex(std::string gname,
 /// The germline name.
 /// @return
 /// A 2-tuple containing the germline start and end indices.
-std::pair<int, int> FindGermlineStartEnd(YAML::Node root,
-                                            std::string gname) {
+std::pair<int, int> FindGermlineStartEnd(YAML::Node root, std::string gname) {
   assert(root.IsMap());
   int gstart = 0, gend = root["states"].size() - 1;
   while (root["states"][gstart]["name"].as<std::string>().find(gname) ==

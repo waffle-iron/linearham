@@ -37,7 +37,7 @@ Smooshable::Smooshable(Eigen::Ref<Eigen::MatrixXd> marginal) {
 /// The number of alternative start points allowed on the 5' (left) side.
 /// @param[in] right_flex
 /// The number of alternative end points allowed on the 3' (right) side.
-//SmooshableGermline::SmooshableGermline(
+// SmooshableGermline::SmooshableGermline(
 //    Germline germline, int start,
 //    const Eigen::Ref<const Eigen::VectorXi>& emission_indices, int left_flex,
 //    int right_flex)

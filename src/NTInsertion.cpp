@@ -48,8 +48,7 @@ NTInsertion::NTInsertion(YAML::Node root) {
 
   std::vector<std::string> state_names;
   Eigen::VectorXd probs;
-  std::tie(state_names, probs) =
-      ParseStringProbMap(init_state["transitions"]);
+  std::tie(state_names, probs) = ParseStringProbMap(init_state["transitions"]);
 
   // The init state has landing probabilities in each of the NTI states.
   for (unsigned int i = 0; i < state_names.size(); i++) {
@@ -92,23 +91,22 @@ NTInsertion::NTInsertion(YAML::Node root) {
 };
 
 
-/// @brief Creates the matrix with the probabilities of non-templated insertions to
-/// the left of a given D or J gene.
+/// @brief Creates the matrix with the probabilities of non-templated insertions
+/// to the left of a given D or J gene.
 /// @param[in] left_flexbounds
-/// A 2-tuple of read positions providing the right flex bounds of the germline to the left
-/// of the NTI region.
+/// A 2-tuple of read positions providing the right flex bounds of the germline
+/// to the left of the NTI region.
 /// @param[in] right_flexbounds
-/// A 2-tuple of read positions providing the left flex bounds of the germline to the right
-/// of the NTI region.
+/// A 2-tuple of read positions providing the left flex bounds of the germline
+/// to the right of the NTI region.
 /// @param[in] emission_indices
 /// A vector of indices corresponding to the observed bases of the read.
 /// @param[in] right_relpos
-/// The read position corresponding to the first base of the germline gene to the right
-/// of the NTI region.
-Eigen::MatrixXd NTInsertion::NTIProbMatrix(std::pair<int, int> left_flexbounds,
-                                           std::pair<int, int> right_flexbounds,
-                                           Eigen::Ref<Eigen::VectorXi> emission_indices,
-                                           int right_relpos) {
+/// The read position corresponding to the first base of the germline gene to
+/// the right of the NTI region.
+Eigen::MatrixXd NTInsertion::NTIProbMatrix(
+    std::pair<int, int> left_flexbounds, std::pair<int, int> right_flexbounds,
+    Eigen::Ref<Eigen::VectorXi> emission_indices, int right_relpos) {
   assert(left_flexbounds.second >= left_flexbounds.first);
   assert(right_flexbounds.second >= right_flexbounds.first);
   assert(right_flexbounds.first >= left_flexbounds.first + 1);
@@ -120,7 +118,8 @@ Eigen::MatrixXd NTInsertion::NTIProbMatrix(std::pair<int, int> left_flexbounds,
   g_lr = left_flexbounds.second;
   g_rl = right_flexbounds.first;
   g_rr = right_flexbounds.second;
-  Eigen::MatrixXd cache_mat = Eigen::MatrixXd::Zero(g_lr - g_ll + 1, n_transition_.cols());
+  Eigen::MatrixXd cache_mat =
+      Eigen::MatrixXd::Zero(g_lr - g_ll + 1, n_transition_.cols());
   Eigen::MatrixXd outp(g_lr - g_ll + 1, g_rr - g_rl + 1);
 
   // looping from left to right across the NTI region
@@ -130,16 +129,19 @@ Eigen::MatrixXd NTInsertion::NTIProbMatrix(std::pair<int, int> left_flexbounds,
       if (i != g_ll) cache_mat.topRows(i - g_ll) *= n_transition_;
       cache_mat.row(i - g_ll) = n_landing_in_;
       RowVecMatCwise(n_emission_matrix_.row(emission_indices[i]),
-                     cache_mat.topRows(i - g_ll + 1), cache_mat.topRows(i - g_ll + 1));
+                     cache_mat.topRows(i - g_ll + 1),
+                     cache_mat.topRows(i - g_ll + 1));
     } else {
       // non-flex & right flex computations
       cache_mat *= n_transition_;
-      RowVecMatCwise(n_emission_matrix_.row(emission_indices[i]),
-                     cache_mat, cache_mat);
+      RowVecMatCwise(n_emission_matrix_.row(emission_indices[i]), cache_mat,
+                     cache_mat);
     }
 
     // storing final probabilities in output matrix
-    if (i >= g_rl - 1) outp.col(i - (g_rl - 1)) = cache_mat * n_landing_out_.col(i + 1 - right_relpos);
+    if (i >= g_rl - 1)
+      outp.col(i - (g_rl - 1)) =
+          cache_mat * n_landing_out_.col(i + 1 - right_relpos);
   }
 
   return outp;

@@ -50,8 +50,7 @@ Germline::Germline(YAML::Node root) {
 
   std::vector<std::string> state_names;
   Eigen::VectorXd probs;
-  std::tie(state_names, probs) =
-      ParseStringProbMap(init_state["transitions"]);
+  std::tie(state_names, probs) = ParseStringProbMap(init_state["transitions"]);
 
   // The init state has landing probabilities in some of the germline
   // gene positions.
@@ -167,23 +166,25 @@ void Germline::MatchMatrix(
 };
 
 
-/// @brief Creates the matrix with the probabilities of various germline linear matches.
+/// @brief Creates the matrix with the probabilities of various germline linear
+/// matches.
 /// @param[in] left_flexbounds
-/// A 2-tuple of read positions providing the bounds of the germline's left flex region.
+/// A 2-tuple of read positions providing the bounds of the germline's left flex
+/// region.
 /// @param[in] right_flexbounds
-/// A 2-tuple of read positions providing the bounds of the germline's right flex region.
+/// A 2-tuple of read positions providing the bounds of the germline's right
+/// flex region.
 /// @param[in] emission_indices
 /// A vector of indices corresponding to the observed bases of the read.
 /// @param[in] relpos
 /// The read position corresponding to the first base of the germline gene.
 ///
-/// This function uses `MatchMatrix` to build the match matrix for the relevant part of
-/// the germline gene and then pads the remaining flex positions without germline states
-/// by filling the match matrix with zeroes.
-Eigen::MatrixXd Germline::GermlineProbMatrix(std::pair<int, int> left_flexbounds,
-                                             std::pair<int, int> right_flexbounds,
-                                             Eigen::Ref<Eigen::VectorXi> emission_indices,
-                                             int relpos) {
+/// This function uses `MatchMatrix` to build the match matrix for the relevant
+/// part of the germline gene then pads the remaining flex positions without
+/// germline states by filling the match matrix with zeroes.
+Eigen::MatrixXd Germline::GermlineProbMatrix(
+    std::pair<int, int> left_flexbounds, std::pair<int, int> right_flexbounds,
+    Eigen::Ref<Eigen::VectorXi> emission_indices, int relpos) {
   assert(left_flexbounds.second >= left_flexbounds.first);
   assert(right_flexbounds.second >= right_flexbounds.first);
   assert(right_flexbounds.first >= left_flexbounds.first + 1);
@@ -195,9 +196,11 @@ Eigen::MatrixXd Germline::GermlineProbMatrix(std::pair<int, int> left_flexbounds
   g_lr = left_flexbounds.second;
   g_rl = right_flexbounds.first;
   g_rr = right_flexbounds.second;
-  Eigen::MatrixXd outp = Eigen::MatrixXd::Zero(g_lr - g_ll + 1, g_rr - g_rl + 1);
+  Eigen::MatrixXd outp =
+      Eigen::MatrixXd::Zero(g_lr - g_ll + 1, g_rr - g_rl + 1);
 
-  // determining the output matrix block that will hold the germline match matrix
+  // determining the output matrix block that will hold the germline match
+  // matrix
   int left_flex, right_flex;
 
   int read_start = std::max(relpos, g_ll);
