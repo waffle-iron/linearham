@@ -180,8 +180,8 @@ TEST_CASE("Germline", "[germline]") {
 
   Germline V_Germline(V_root);
 
-  REQUIRE(V_Germline.landing().isApprox(V_landing));
-  REQUIRE(V_Germline.emission_matrix().isApprox(V_emission_matrix));
+  REQUIRE(V_Germline.landing() == V_landing);
+  REQUIRE(V_Germline.emission_matrix() == V_emission_matrix);
   REQUIRE(V_Germline.transition().isApprox(V_transition));
   REQUIRE(V_Germline.gene_prob() == V_gene_prob);
   REQUIRE(V_Germline.length() == V_transition.cols());
@@ -220,8 +220,8 @@ TEST_CASE("Germline", "[germline]") {
 
   Germline D_Germline(D_root);
 
-  REQUIRE(D_Germline.landing().isApprox(D_landing));
-  REQUIRE(D_Germline.emission_matrix().isApprox(D_emission_matrix));
+  REQUIRE(D_Germline.landing() == D_landing);
+  REQUIRE(D_Germline.emission_matrix() == D_emission_matrix);
   REQUIRE(D_Germline.transition().isApprox(D_transition));
   REQUIRE(D_Germline.gene_prob() == D_gene_prob);
   REQUIRE(D_Germline.length() == D_transition.cols());
@@ -260,8 +260,8 @@ TEST_CASE("Germline", "[germline]") {
 
   Germline J_Germline(J_root);
 
-  REQUIRE(J_Germline.landing().isApprox(J_landing));
-  REQUIRE(J_Germline.emission_matrix().isApprox(J_emission_matrix));
+  REQUIRE(J_Germline.landing() == J_landing);
+  REQUIRE(J_Germline.emission_matrix() == J_emission_matrix);
   REQUIRE(J_Germline.transition().isApprox(J_transition));
   REQUIRE(J_Germline.gene_prob() == J_gene_prob);
   REQUIRE(J_Germline.length() == J_transition.cols());
@@ -277,6 +277,97 @@ TEST_CASE("Germline", "[germline]") {
 
   REQUIRE(J_Germline.germline_prob_matrix(J_left_flexbounds, J_right_flexbounds,
                                           emission_indices, J_relpos).isApprox(J_germline_prob_matrix));
+}
+
+
+// NTInsertion tests
+
+TEST_CASE("NTInsertion", "[insertion]") {
+  initialize_global_test_vars();
+
+  // V genes can't initialize NTInsertion objects.
+  // NTInsertion V_NTInsertion = NTInsertion(V_root);
+
+  // D tests
+  Eigen::VectorXd D_n_landing_in(4);
+  D_n_landing_in << 0.1, 0.2, 0.1, 0.05;
+  Eigen::MatrixXd D_n_landing_out(4,5);
+  D_n_landing_out <<
+  0.45, 0.125, 0.1, 0, 0,
+  0.45, 0.125, 0.1, 0, 0,
+  0.45, 0.125, 0.1, 0, 0,
+  0.45, 0.125, 0.1, 0, 0;
+  Eigen::MatrixXd D_n_emission_matrix(4,4);
+  D_n_emission_matrix <<
+  0.7, 0.1, 0.1, 0.1,
+  0.1, 0.7, 0.1, 0.1,
+  0.1, 0.1, 0.7, 0.1,
+  0.1, 0.1, 0.1, 0.7;
+  Eigen::MatrixXd D_n_transition(4,4);
+  D_n_transition <<
+  0.075, 0.175, 0.05, 0.025,
+  0.075, 0.175, 0.05, 0.025,
+  0.075, 0.175, 0.05, 0.025,
+  0.075, 0.175, 0.05, 0.025;
+
+  NTInsertion D_NTInsertion = NTInsertion(D_root);
+
+  REQUIRE(D_NTInsertion.n_landing_in() == D_n_landing_in);
+  REQUIRE(D_NTInsertion.n_landing_out() == D_n_landing_out);
+  REQUIRE(D_NTInsertion.n_emission_matrix() == D_n_emission_matrix);
+  REQUIRE(D_NTInsertion.n_transition() == D_n_transition);
+
+  int D_right_relpos = 5;
+  std::pair<int, int> D_left_flexbounds = std::make_pair(4, 5);
+  std::pair<int, int> D_right_flexbounds = std::make_pair(6, 8);
+  Eigen::MatrixXd D_nti_prob_matrix(2,3);
+  D_nti_prob_matrix <<
+  0.000726562, 7.99219e-05, 0,
+     0.013125,  0.00144375, 0;
+
+  REQUIRE(D_NTInsertion.nti_prob_matrix(D_left_flexbounds, D_right_flexbounds,
+                                        emission_indices, D_right_relpos).isApprox(D_nti_prob_matrix, 1e-5));
+
+  // J tests
+  Eigen::VectorXd J_n_landing_in(4);
+  J_n_landing_in << 0.1, 0.2, 0.2, 0.2;
+  Eigen::MatrixXd J_n_landing_out(4,5);
+  J_n_landing_out <<
+  0.4, 0.25, 0, 0, 0,
+  0.4, 0.25, 0, 0, 0,
+  0.4, 0.25, 0, 0, 0,
+  0.4, 0.25, 0, 0, 0;
+  Eigen::MatrixXd J_n_emission_matrix(4,4);
+  J_n_emission_matrix <<
+  0.94, 0.02, 0.02, 0.02,
+  0.02, 0.94, 0.02, 0.02,
+  0.02, 0.02, 0.94, 0.02,
+  0.02, 0.02, 0.02, 0.94;
+  Eigen::MatrixXd J_n_transition(4,4);
+  J_n_transition <<
+  0.05, 0.15, 0.075, 0.075,
+  0.05, 0.15, 0.075, 0.075,
+  0.05, 0.15, 0.075, 0.075,
+  0.05, 0.15, 0.075, 0.075;
+
+  NTInsertion J_NTInsertion = NTInsertion(J_root);
+
+  REQUIRE(J_NTInsertion.n_landing_in() == J_n_landing_in);
+  REQUIRE(J_NTInsertion.n_landing_out() == J_n_landing_out);
+  REQUIRE(J_NTInsertion.n_emission_matrix() == J_n_emission_matrix);
+  REQUIRE(J_NTInsertion.n_transition() == J_n_transition);
+
+  int J_right_relpos = 2;
+  std::pair<int, int> J_left_flexbounds = std::make_pair(1, 3);
+  std::pair<int, int> J_right_flexbounds = std::make_pair(2, 4);
+  Eigen::MatrixXd J_nti_prob_matrix(3,3);
+  J_nti_prob_matrix <<
+  0.0792, 0.0026235, 0,
+       0,    0.0265, 0,
+       0,         0, 0;
+
+  REQUIRE(J_NTInsertion.nti_prob_matrix(J_left_flexbounds, J_right_flexbounds,
+                                        emission_indices, J_right_relpos).isApprox(J_nti_prob_matrix));
 }
 
 

@@ -187,8 +187,8 @@ Eigen::MatrixXd Germline::germline_prob_matrix(std::pair<int, int> left_flexboun
                                                int relpos) {
   assert(left_flexbounds.second >= left_flexbounds.first);
   assert(right_flexbounds.second >= right_flexbounds.first);
-  assert(right_flexbounds.first > left_flexbounds.first);
-  assert(right_flexbounds.second > left_flexbounds.second);
+  assert(right_flexbounds.first >= left_flexbounds.first + 1);
+  assert(right_flexbounds.second >= left_flexbounds.second + 1);
   assert(left_flexbounds.second >= relpos);
 
   int g_ll, g_lr, g_rl, g_rr;
