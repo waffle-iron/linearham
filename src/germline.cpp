@@ -14,7 +14,7 @@ Germline::Germline(YAML::Node root) {
   // For the rest of this function, g[something] means germline_[something].
   std::vector<std::string> alphabet;
   std::unordered_map<std::string, int> alphabet_map;
-  std::tie(alphabet, alphabet_map) = get_alphabet(root);
+  std::tie(alphabet, alphabet_map) = GetAlphabet(root);
   std::string gname = root["name"].as<std::string>();
 
   // In the YAML file, states of the germline gene are denoted
@@ -23,14 +23,14 @@ Germline::Germline(YAML::Node root) {
   // insert_left_[base].
   // The regex's obtained below extract the corresponding position and base.
   std::regex grgx, nrgx;
-  std::tie(grgx, nrgx) = get_regex(gname, alphabet);
+  std::tie(grgx, nrgx) = GetStateRegex(gname, alphabet);
   std::smatch match;
 
   // The HMM YAML has insert_left states (perhaps), germline-encoded states,
   // then insert_right states (perhaps).
   // Here we step through the insert states to get to the germline states.
   int gstart, gend;
-  std::tie(gstart, gend) = find_germline_start_end(root, gname);
+  std::tie(gstart, gend) = FindGermlineStartEnd(root, gname);
   assert((gstart == 2) ^ (gstart == (alphabet.size() + 1)));
   assert((gend == (root["states"].size() - 1)) ^
          (gend == (root["states"].size() - 2)));
@@ -51,7 +51,7 @@ Germline::Germline(YAML::Node root) {
   std::vector<std::string> state_names;
   Eigen::VectorXd probs;
   std::tie(state_names, probs) =
-      parse_string_prob_map(init_state["transitions"]);
+      ParseStringProbMap(init_state["transitions"]);
 
   // The init state has landing probabilities in some of the germline
   // gene positions.
@@ -73,7 +73,7 @@ Germline::Germline(YAML::Node root) {
     // Make sure the nominal state number corresponds with the order.
     assert(gindex == i - gstart);
 
-    std::tie(state_names, probs) = parse_string_prob_map(gstate["transitions"]);
+    std::tie(state_names, probs) = ParseStringProbMap(gstate["transitions"]);
 
     for (unsigned int j = 0; j < state_names.size(); j++) {
       if (std::regex_match(state_names[j], match, grgx)) {
@@ -89,8 +89,8 @@ Germline::Germline(YAML::Node root) {
     }
 
     std::tie(state_names, probs) =
-        parse_string_prob_map(gstate["emissions"]["probs"]);
-    assert(is_equal_string_vecs(state_names, alphabet));
+        ParseStringProbMap(gstate["emissions"]["probs"]);
+    assert(IsEqualStringVecs(state_names, alphabet));
 
     for (unsigned int j = 0; j < state_names.size(); j++) {
       emission_matrix_(alphabet_map[state_names[j]], gindex) = probs[j];

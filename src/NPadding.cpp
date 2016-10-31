@@ -14,14 +14,14 @@ NPadding::NPadding(YAML::Node root) {
   // For the rest of this function, g[something] means germline_[something].
   std::vector<std::string> alphabet;
   std::unordered_map<std::string, int> alphabet_map;
-  std::tie(alphabet, alphabet_map) = get_alphabet(root);
+  std::tie(alphabet, alphabet_map) = GetAlphabet(root);
   std::string gname = root["name"].as<std::string>();
 
   // The HMM YAML has insert_left states (perhaps), germline-encoded states,
   // then insert_right states (perhaps).
   // Here we step through the insert states to get to the germline states.
   int gstart, gend;
-  std::tie(gstart, gend) = find_germline_start_end(root, gname);
+  std::tie(gstart, gend) = FindGermlineStartEnd(root, gname);
   // Either we parse a "insert_left_N" or "insert_right_N" state (or neither).
   assert((gstart == 2) ^ (gend == (root["states"].size() - 2)));
 
@@ -65,7 +65,7 @@ NPadding::NPadding(YAML::Node root) {
 
   std::vector<std::string> state_names;
   Eigen::VectorXd probs;
-  std::tie(state_names, probs) = parse_string_prob_map(nstate["transitions"]);
+  std::tie(state_names, probs) = ParseStringProbMap(nstate["transitions"]);
 
   // The "insert_[left|right]_N" state either transitions back to itself
   // or enters the [first germline|end] state.
@@ -79,8 +79,8 @@ NPadding::NPadding(YAML::Node root) {
   }
 
   std::tie(state_names, probs) =
-      parse_string_prob_map(nstate["emissions"]["probs"]);
-  assert(is_equal_string_vecs(state_names, alphabet));
+      ParseStringProbMap(nstate["emissions"]["probs"]);
+  assert(IsEqualStringVecs(state_names, alphabet));
 
   for (unsigned int j = 0; j < state_names.size(); j++) {
     assert(probs[j] == 0.25);

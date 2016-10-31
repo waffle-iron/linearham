@@ -16,9 +16,9 @@ YAML::Node V_root, D_root, J_root;
 Eigen::VectorXi emission_indices(13);
 
 void initialize_global_test_vars() {
-  V_root = get_yaml_root("data/V_germline_ex.yaml");
-  D_root = get_yaml_root("data/D_germline_ex.yaml");
-  J_root = get_yaml_root("data/J_germline_ex.yaml");
+  V_root = GetYAMLRoot("data/V_germline_ex.yaml");
+  D_root = GetYAMLRoot("data/D_germline_ex.yaml");
+  J_root = GetYAMLRoot("data/J_germline_ex.yaml");
   emission_indices << 0, 1, 0, 2, 3, 0, 1, 1, 1, 3, 2, 3, 3;
 }
 
@@ -519,7 +519,7 @@ TEST_CASE("NTInsertion", "[insertion]") {
 //  V_n_emission_vector << 0.25, 0.25, 0.25, 0.25;
 
 //  Germline correct_V_Germline(V_landing, V_emission_matrix, V_next_transition);
-//  YAML::Node V_root = get_yaml_root("data/V_germline_ex.yaml");
+//  YAML::Node V_root = GetYAMLRoot("data/V_germline_ex.yaml");
 //  Germline V_Germline = Germline(V_root);
 //  NPadding V_NPadding = NPadding(V_root);
 //  // V genes can't initialize NTInsertion objects.
@@ -564,7 +564,7 @@ TEST_CASE("NTInsertion", "[insertion]") {
 //  0.075, 0.175, 0.05, 0.025;
 
 //  Germline correct_D_Germline(D_landing, D_emission_matrix, D_next_transition);
-//  YAML::Node D_root = get_yaml_root("data/D_germline_ex.yaml");
+//  YAML::Node D_root = GetYAMLRoot("data/D_germline_ex.yaml");
 //  Germline D_Germline = Germline(D_root);
 //  NTInsertion D_NTInsertion = NTInsertion(D_root);
 //  // D genes can't initialize NPadding objects.
@@ -614,7 +614,7 @@ TEST_CASE("NTInsertion", "[insertion]") {
 //  J_n_emission_vector << 0.25, 0.25, 0.25, 0.25;
 
 //  Germline correct_J_Germline(J_landing, J_emission_matrix, J_next_transition);
-//  YAML::Node J_root = get_yaml_root("data/J_germline_ex.yaml");
+//  YAML::Node J_root = GetYAMLRoot("data/J_germline_ex.yaml");
 //  Germline J_Germline = Germline(J_root);
 //  NTInsertion J_NTInsertion = NTInsertion(J_root);
 //  NPadding J_NPadding = NPadding(J_root);

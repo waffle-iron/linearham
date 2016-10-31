@@ -13,7 +13,7 @@ const double EPS_PARSE = 1e-5;
 /// A string providing the path to a YAML file.
 /// @return
 /// A YAML root node.
-YAML::Node get_yaml_root(std::string yaml_path) {
+YAML::Node GetYAMLRoot(std::string yaml_path) {
   assert(yaml_path.substr(yaml_path.length() - 4, 4) == "yaml");
   YAML::Node root = YAML::LoadFile(yaml_path);
   return root;
@@ -27,7 +27,7 @@ YAML::Node get_yaml_root(std::string yaml_path) {
 /// The (sorted) vector to be tested against for set equality.
 /// @return
 /// If it is.
-bool is_equal_string_vecs(std::vector<std::string> vec1,
+bool IsEqualStringVecs(std::vector<std::string> vec1,
                           std::vector<std::string> vec2) {
   assert(std::is_sorted(vec2.begin(), vec2.end()));
   std::sort(vec1.begin(), vec1.end());
@@ -40,7 +40,7 @@ bool is_equal_string_vecs(std::vector<std::string> vec1,
 /// A YAML map node.
 /// @return
 /// The map.
-std::pair<std::vector<std::string>, Eigen::VectorXd> parse_string_prob_map(
+std::pair<std::vector<std::string>, Eigen::VectorXd> ParseStringProbMap(
     YAML::Node node) {
   assert(node.IsMap());
   std::vector<std::string> state_names(node.size());
@@ -64,7 +64,7 @@ std::pair<std::vector<std::string>, Eigen::VectorXd> parse_string_prob_map(
 /// @return
 /// A 2-tuple containing the alphabet and alphabet-map.
 std::pair<std::vector<std::string>, std::unordered_map<std::string, int>>
-get_alphabet(YAML::Node root) {
+GetAlphabet(YAML::Node root) {
   assert(root.IsMap());
   std::vector<std::string> alphabet =
       root["tracks"]["nukes"].as<std::vector<std::string>>();
@@ -84,7 +84,7 @@ get_alphabet(YAML::Node root) {
 /// The alphabet.
 /// @return
 /// A 2-tuple containing the regex's.
-std::pair<std::regex, std::regex> get_regex(std::string gname,
+std::pair<std::regex, std::regex> GetStateRegex(std::string gname,
                                             std::vector<std::string> alphabet) {
   std::regex grgx("^" + gname + "_([0-9]+)$");
   std::regex nrgx(
@@ -103,7 +103,7 @@ std::pair<std::regex, std::regex> get_regex(std::string gname,
 /// The germline name.
 /// @return
 /// A 2-tuple containing the germline start and end indices.
-std::pair<int, int> find_germline_start_end(YAML::Node root,
+std::pair<int, int> FindGermlineStartEnd(YAML::Node root,
                                             std::string gname) {
   assert(root.IsMap());
   int gstart = 0, gend = root["states"].size() - 1;
