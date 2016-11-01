@@ -390,7 +390,7 @@ TEST_CASE("NPadding", "[npadding]") {
 
   int V_read_pos = 2;
   std::pair<int, int> V_flexbounds = std::make_pair(0, 3);
-  double V_NPaddingProb = 0.33333333333333337*0.25*0.33333333333333337*0.25*0.6666666666666666;
+  double V_NPaddingProb = 0.33333333333333337*0.25*0.33333333333333337*0.25*(1 - 0.33333333333333337);
 
   REQUIRE(V_NPadding.NPaddingProb(V_flexbounds, emission_indices,
                                   V_read_pos, true) == V_NPaddingProb);
@@ -410,7 +410,7 @@ TEST_CASE("NPadding", "[npadding]") {
 
   int J_read_pos = 10;
   std::pair<int, int> J_flexbounds = std::make_pair(9, 13);
-  double J_NPaddingProb = 0.96*0.25*0.96*0.25*0.96*0.25*0.040000000000000036;
+  double J_NPaddingProb = 0.96*0.25*0.96*0.25*0.96*0.25*(1 - 0.96);
 
   REQUIRE(J_NPadding.NPaddingProb(J_flexbounds, emission_indices,
                                   J_read_pos, false) == J_NPaddingProb);
