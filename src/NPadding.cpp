@@ -108,9 +108,9 @@ double NPadding::NPaddingProb(std::pair<int, int> flexbounds,
   assert(flexbounds.first <= flexbounds.second);
   assert(flexbounds.first <= read_pos || read_pos <= flexbounds.second);
 
-  assert(read_pos < emission_indices.size());
-  assert(flexbounds.first < emission_indices.size() &&
-         flexbounds.second < emission_indices.size());
+  assert(read_pos <= emission_indices.size());
+  assert(flexbounds.first <= emission_indices.size() &&
+         flexbounds.second <= emission_indices.size());
 
   int g_l, g_r, pad_start, pad_end;
   g_l = flexbounds.first;

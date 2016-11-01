@@ -284,7 +284,7 @@ TEST_CASE("Germline", "[germline]") {
 
 // NTInsertion tests
 
-TEST_CASE("NTInsertion", "[insertion]") {
+TEST_CASE("NTInsertion", "[ntinsertion]") {
   initialize_global_test_vars();
 
   // V genes can't initialize NTInsertion objects.
@@ -370,6 +370,50 @@ TEST_CASE("NTInsertion", "[insertion]") {
 
   REQUIRE(J_NTInsertion.NTIProbMatrix(J_left_flexbounds, J_right_flexbounds,
                                       emission_indices, J_right_relpos).isApprox(J_NTIProbMatrix));
+}
+
+
+// NPadding tests
+
+TEST_CASE("NPadding", "[npadding]") {
+  initialize_global_test_vars();
+
+  // V tests
+  double V_n_transition_prob = 0.33333333333333337;
+  Eigen::VectorXd V_n_emission_vector(4);
+  V_n_emission_vector << 0.25, 0.25, 0.25, 0.25;
+
+  NPadding V_NPadding(V_root);
+
+  REQUIRE(V_NPadding.n_transition_prob() == V_n_transition_prob);
+  REQUIRE(V_NPadding.n_emission_vector() == V_n_emission_vector);
+
+  int V_read_pos = 2;
+  std::pair<int, int> V_flexbounds = std::make_pair(0, 3);
+  double V_NPaddingProb = 0.33333333333333337*0.25*0.33333333333333337*0.25*0.6666666666666666;
+
+  REQUIRE(V_NPadding.NPaddingProb(V_flexbounds, emission_indices,
+                                  V_read_pos, true) == V_NPaddingProb);
+
+  // D genes can't initialize NPadding objects.
+  // NPadding D_NPadding = NPadding(D_root);
+
+  // J tests
+  double J_n_transition_prob = 0.96;
+  Eigen::VectorXd J_n_emission_vector(4);
+  J_n_emission_vector << 0.25, 0.25, 0.25, 0.25;
+
+  NPadding J_NPadding(J_root);
+
+  REQUIRE(J_NPadding.n_transition_prob() == J_n_transition_prob);
+  REQUIRE(J_NPadding.n_emission_vector() == J_n_emission_vector);
+
+  int J_read_pos = 10;
+  std::pair<int, int> J_flexbounds = std::make_pair(9, 13);
+  double J_NPaddingProb = 0.96*0.25*0.96*0.25*0.96*0.25*0.040000000000000036;
+
+  REQUIRE(J_NPadding.NPaddingProb(J_flexbounds, emission_indices,
+                                  J_read_pos, false) == J_NPaddingProb);
 }
 
 
