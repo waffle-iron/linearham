@@ -72,7 +72,7 @@ NPadding::NPadding(YAML::Node root) {
   for (unsigned int i = 0; i < state_names.size(); i++) {
     if (state_names[i] == nname) {
       assert(probs[i] == correct_trans_prob);
-      n_self_transition_prob_ = probs[i];
+      n_transition_prob_ = probs[i];
     } else {
       assert(state_names[i] == next_name);
     }
@@ -86,5 +86,53 @@ NPadding::NPadding(YAML::Node root) {
     assert(probs[j] == 0.25);
     n_emission_vector_[alphabet_map[state_names[j]]] = probs[j];
   }
+};
+
+
+/// @brief Calculates the probability of a path through padded germline states
+/// to the left (right) of a given V (J) gene.
+/// @param[in] flexbounds
+/// A 2-tuple of read positions providing the left (right) flex bounds of a V
+/// (J) gene.
+/// @param[in] emission_indices
+/// A vector of indices corresponding to the observed bases of the read.
+/// @param[in] read_pos
+/// The read position of the first germline base or the read position to the
+/// right of the last germline base in the case of a V or J gene, respectively.
+/// @param[in] pad_left
+/// A boolean specifying whether to pad the germline on the left (i.e. V gene)
+/// or on the right (i.e. J gene).
+double NPadding::NPaddingProb(std::pair<int, int> flexbounds,
+                              Eigen::Ref<Eigen::VectorXi> emission_indices,
+                              int read_pos, bool pad_left) {
+  assert(flexbounds.first <= flexbounds.second);
+  assert(flexbounds.first <= read_pos || read_pos <= flexbounds.second);
+
+  assert(read_pos < emission_indices.size());
+  assert(flexbounds.first < emission_indices.size() &&
+         flexbounds.second < emission_indices.size());
+
+  int g_l, g_r, pad_start, pad_end;
+  g_l = flexbounds.first;
+  g_r = flexbounds.second;
+  double prob;
+
+  // finding the read positions that need padded germline states
+  if (pad_left) {
+    pad_start = g_l;
+    pad_end = read_pos;
+  } else {
+    pad_start = read_pos;
+    pad_end = g_r;
+  }
+  int n_count = pad_end - pad_start;
+
+  // computing the probability of the padded germline path
+  prob = pow(n_transition_prob_, n_count) * (1 - n_transition_prob_);
+  for (int i = pad_start; i < pad_end; i++) {
+    prob *= n_emission_vector_[emission_indices[i]];
+  }
+
+  return prob;
 };
 }

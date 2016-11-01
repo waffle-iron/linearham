@@ -185,11 +185,17 @@ void Germline::MatchMatrix(
 Eigen::MatrixXd Germline::GermlineProbMatrix(
     std::pair<int, int> left_flexbounds, std::pair<int, int> right_flexbounds,
     Eigen::Ref<Eigen::VectorXi> emission_indices, int relpos) {
-  assert(left_flexbounds.second >= left_flexbounds.first);
-  assert(right_flexbounds.second >= right_flexbounds.first);
-  assert(right_flexbounds.first >= left_flexbounds.first + 1);
-  assert(right_flexbounds.second >= left_flexbounds.second + 1);
-  assert(left_flexbounds.second >= relpos);
+  assert(left_flexbounds.first <= left_flexbounds.second);
+  assert(right_flexbounds.first <= right_flexbounds.second);
+  assert(left_flexbounds.first + 1 <= right_flexbounds.first);
+  assert(left_flexbounds.second + 1 <= right_flexbounds.second);
+  assert(relpos <= left_flexbounds.second);
+
+  assert(relpos < emission_indices.size());
+  assert(left_flexbounds.first < emission_indices.size() &&
+         left_flexbounds.second < emission_indices.size());
+  assert(right_flexbounds.first <= emission_indices.size() &&
+         right_flexbounds.second <= emission_indices.size());
 
   int g_ll, g_lr, g_rl, g_rr;
   g_ll = left_flexbounds.first;
