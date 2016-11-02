@@ -189,7 +189,7 @@ Eigen::MatrixXd Germline::GermlineProbMatrix(
   assert(right_flexbounds.first <= right_flexbounds.second);
   assert(left_flexbounds.first + 1 <= right_flexbounds.first);
   assert(left_flexbounds.second + 1 <= right_flexbounds.second);
-  assert(relpos <= left_flexbounds.second);
+  assert(right_flexbounds.first <= relpos + this->length());
 
   assert(relpos < emission_indices.size());
   assert(left_flexbounds.first < emission_indices.size() &&
@@ -204,6 +204,10 @@ Eigen::MatrixXd Germline::GermlineProbMatrix(
   g_rr = right_flexbounds.second;
   Eigen::MatrixXd outp =
       Eigen::MatrixXd::Zero(g_lr - g_ll + 1, g_rr - g_rl + 1);
+
+  // if the germline's left flex region has no germline states,
+  // return a match probability matrix filled only with zeroes.
+  if (relpos > g_lr) return outp;
 
   // determining the output matrix block that will hold the germline match
   // matrix

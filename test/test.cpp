@@ -241,6 +241,15 @@ TEST_CASE("Germline", "[germline]") {
   REQUIRE(D_Germline.GermlineProbMatrix(D_left_flexbounds, D_right_flexbounds,
                                         emission_indices, D_relpos).isApprox(D_GermlineProbMatrix));
 
+  D_relpos = 6;
+  D_GermlineProbMatrix <<
+  0, 0, 0,
+  0, 0, 0,
+  0, 0, 0;
+
+  REQUIRE(D_Germline.GermlineProbMatrix(D_left_flexbounds, D_right_flexbounds,
+                                        emission_indices, D_relpos) == D_GermlineProbMatrix);
+
   // J tests
   Eigen::VectorXd J_landing(5);
   J_landing << 0.25, 0.05, 0, 0, 0;
@@ -279,6 +288,14 @@ TEST_CASE("Germline", "[germline]") {
 
   REQUIRE(J_Germline.GermlineProbMatrix(J_left_flexbounds, J_right_flexbounds,
                                         emission_indices, J_relpos).isApprox(J_GermlineProbMatrix));
+
+  J_relpos = 11;
+  J_GermlineProbMatrix <<
+  0, 0,
+  0, 0;
+
+  REQUIRE(J_Germline.GermlineProbMatrix(J_left_flexbounds, J_right_flexbounds,
+                                        emission_indices, J_relpos) == J_GermlineProbMatrix);
 }
 
 
