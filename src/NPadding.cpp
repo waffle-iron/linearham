@@ -120,9 +120,9 @@ double NPadding::NPaddingProb(std::pair<int, int> flexbounds,
   // finding the read positions that need padded germline states
   if (pad_left) {
     pad_start = g_l;
-    pad_end = read_pos;
+    pad_end = std::max(read_pos, g_l);
   } else {
-    pad_start = read_pos;
+    pad_start = std::min(read_pos, g_r);
     pad_end = g_r;
   }
   int n_count = pad_end - pad_start;
