@@ -123,7 +123,7 @@ void Germline::EmissionVector(
     const Eigen::Ref<const Eigen::VectorXi>& emission_indices, int start,
     Eigen::Ref<Eigen::VectorXd> emission) {
   int length = emission_indices.size();
-  assert(this->length() <= start + length);
+  assert(start + length <= this->length());
   VectorByIndices(
       emission_matrix_.block(0, start, emission_matrix_.rows(), length),
       emission_indices, emission);
@@ -154,7 +154,7 @@ void Germline::MatchMatrix(
   int length = emission_indices.size();
   assert(0 <= left_flex && left_flex <= length - 1);
   assert(0 <= right_flex && right_flex <= length - 1);
-  assert(this->length() <= start + length);
+  assert(start + length <= this->length());
   Eigen::VectorXd emission(length);
   /// @todo Inefficient. Shouldn't calculate fullMatch then cut it down.
   Eigen::MatrixXd fullMatch(length, length);
