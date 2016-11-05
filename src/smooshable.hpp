@@ -95,7 +95,7 @@ std::pair<Smooshable, Smooshable> DSmooshables(std::string yaml_path,
                                                std::pair<int, int> D_right_flexbounds,
                                                Eigen::Ref<Eigen::VectorXi> emission_indices,
                                                int D_relpos);
-void MultiplyLandingGermProbMat(Eigen::Ref<Eigen::VectorXd> landing,
+void MultiplyLandingGermProbMat(Eigen::VectorXd landing,
                                 Eigen::Ref<Eigen::MatrixXd> germ_prob_matrix,
                                 std::pair<int, int> left_flexbounds,
                                 int relpos);
