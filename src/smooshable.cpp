@@ -208,13 +208,11 @@ std::pair<Smooshable, Smooshable> DSmooshables1(std::string yaml_path,
                              V_right_flexbounds, D_relpos);
 
   // computing the germline match probability matrix (assuming some left-NTIs)
-  Eigen::MatrixXd germ_prob_matrix =
+  Eigen::MatrixXd ngerm_prob_matrix =
+      dgerm_obj.NTIProbMatrix(V_right_flexbounds, D_left_flexbounds,
+                              emission_indices, D_relpos) *
       dgerm_obj.GermlineProbMatrix(D_left_flexbounds, D_right_flexbounds,
                                    emission_indices, D_relpos);
-  Eigen::MatrixXd nti_prob_matrix =
-      dgerm_obj.NTIProbMatrix(V_right_flexbounds, D_left_flexbounds,
-                              emission_indices, D_relpos);
-  Eigen::MatrixXd ngerm_prob_matrix = nti_prob_matrix * germ_prob_matrix;
 
   // multiplying in the associated gene probability
   xgerm_prob_matrix *= dgerm_obj.gene_prob();
@@ -269,13 +267,11 @@ std::pair<Smooshable, Smooshable> JSmooshables1(std::string yaml_path,
 
   // computing the germline match probability matrix (assuming some left-NTIs)
   // and extracting the same column as above.
-  Eigen::MatrixXd germ_prob_col =
+  Eigen::MatrixXd ngerm_prob_col =
+      jgerm_obj.NTIProbMatrix(D_right_flexbounds, J_left_flexbounds,
+                              emission_indices, J_relpos) *
       jgerm_obj.GermlineProbMatrix(J_left_flexbounds, J_right_flexbounds,
                                    emission_indices, J_relpos).col(end_pos);
-  Eigen::MatrixXd nti_prob_matrix =
-      jgerm_obj.NTIProbMatrix(D_right_flexbounds, J_left_flexbounds,
-                              emission_indices, J_relpos);
-  Eigen::MatrixXd ngerm_prob_col = nti_prob_matrix * germ_prob_col;
 
   // multiplying in the associated gene and padding probabilities
   xgerm_prob_col *= jgerm_obj.gene_prob();
