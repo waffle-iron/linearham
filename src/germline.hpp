@@ -31,9 +31,9 @@ class Germline {
   virtual ~Germline(){};
   Germline(YAML::Node root);
 
-  Eigen::VectorXd landing() const { return landing_; };
-  Eigen::MatrixXd emission_matrix() const { return emission_matrix_; };
-  Eigen::MatrixXd transition() const { return transition_; };
+  Eigen::Ref<Eigen::VectorXd> landing() { return landing_; };
+  Eigen::Ref<Eigen::MatrixXd> emission_matrix() { return emission_matrix_; };
+  Eigen::Ref<Eigen::MatrixXd> transition() { return transition_; };
   double gene_prob() const { return gene_prob_; };
   int length() const { return transition_.cols(); };
 
