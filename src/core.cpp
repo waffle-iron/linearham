@@ -24,7 +24,8 @@ namespace linearham {
 /// \f]
 /// is the cumulative transition probability of having a match start at i and
 /// end at j, ignoring the transition into the match.
-Eigen::MatrixXd BuildTransition(const Eigen::Ref<Eigen::VectorXd>& next_transition) {
+Eigen::MatrixXd BuildTransition(
+    const Eigen::Ref<Eigen::VectorXd>& next_transition) {
   int ell = next_transition.size() + 1;
   Eigen::MatrixXd transition(ell, ell);
   Eigen::VectorXd fall_off(ell);
