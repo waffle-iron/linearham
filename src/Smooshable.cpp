@@ -1,6 +1,6 @@
-#include "smooshable.hpp"
+#include "Smooshable.hpp"
 
-/// @file smooshable.cpp
+/// @file Smooshable.cpp
 /// @brief Implementation of Smooshable class and descendants.
 
 namespace linearham {

@@ -3,7 +3,7 @@
 
 #include "yaml_utils.hpp"
 
-/// @file germline.hpp
+/// @file Germline.hpp
 /// @brief Headers for the Germline class and descendants.
 
 namespace linearham {

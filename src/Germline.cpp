@@ -1,6 +1,6 @@
-#include "germline.hpp"
+#include "Germline.hpp"
 
-/// @file germline.cpp
+/// @file Germline.cpp
 /// @brief The germline object.
 
 namespace linearham {

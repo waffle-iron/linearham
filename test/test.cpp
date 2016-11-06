@@ -2,7 +2,7 @@
 #define CATCH_CONFIG_MAIN
 
 #include "catch.hpp"
-#include "smooshable_chain.hpp"
+#include "SmooshableChain.hpp"
 #include "../lib/fast-cpp-csv-parser/csv.h"
 
 
