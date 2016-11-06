@@ -9,17 +9,20 @@
 
 
 ## const, references, and Refs
-All passing of Eigen objects should be by reference to avoid copying.
-If these arguments are inputs, then they should be by const reference.
-In addition there is an [Eigen construct called `Ref`](http://eigen.tuxfamily.org/dox/TopicFunctionTakingEigenTypes.html#TopicUsingRefClass) that allows passing either a matrix-like object or a `Block` of that object.
+### Function arguments
+All passing of Eigen objects into functions should be by reference to avoid copying.
+There is an [Eigen construct called `Ref`](http://eigen.tuxfamily.org/dox/TopicFunctionTakingEigenTypes.html#TopicUsingRefClass) that allows passing either a matrix-like object or a `Block` of that object.
 There are a silly number of combinations of these things, but we will use the following two for input (see [this SO question](http://stackoverflow.com/questions/21132538/correct-usage-of-the-eigenref-class), and the examples in [the Ref docs](https://eigen.tuxfamily.org/dox-devel/classEigen_1_1Ref.html)):
 
-* `const Eigen::Ref<const Eigen::MatrixXd>&`: const input
-* `Eigen::Ref<Eigen::MatrixXd>`: writeable input
+* For const input: `const Eigen::Ref<const Eigen::MatrixXd>&`
+* For read/write input: `Eigen::Ref<Eigen::MatrixXd>`
 
-Now return types.
-Indeed, trying to return a  `const Eigen::Ref<const Eigen::MatrixXd>&` gives an error saying that we can't return a reference to a local temporary object, which I think means that we'd have to make a `Ref` object on the fly when what we really have is a Matrix or something.
-So for a const accessor we have `const Eigen::MatrixXd&`, and for now we don't need a non-const accessor.
+### Returns
+* If an Eigen object is made and then returned, it won't be copied because of [return value optimization](https://en.wikipedia.org/wiki/Return_value_optimization).
+* For a const accessor: `const Eigen::MatrixXd&`
+* For now we don't need accessors that can be used as an lvalue (otherwise why not just make the member variable public?), but I think we would return an `Eigen::Ref<Eigen::MatrixXd>`.
+
+Note that trying to return a  `const Eigen::Ref<const Eigen::MatrixXd>&` as an accessor, the compiler gives an error saying that we can't return a reference to a local temporary object, which I think means that we'd have to make a `Ref` object on the fly when what we really have is a Matrix or something.
 
 
 
