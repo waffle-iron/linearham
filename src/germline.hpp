@@ -31,15 +31,15 @@ class Germline {
   virtual ~Germline(){};
   Germline(YAML::Node root);
 
-  Eigen::Ref<Eigen::VectorXd> landing() { return landing_; };
-  Eigen::Ref<Eigen::MatrixXd> emission_matrix() { return emission_matrix_; };
-  Eigen::Ref<Eigen::MatrixXd> transition() { return transition_; };
+  const Eigen::VectorXd& landing() const { return landing_; };
+  const Eigen::MatrixXd& emission_matrix() const { return emission_matrix_; };
+  const Eigen::MatrixXd& transition() const { return transition_; };
   double gene_prob() const { return gene_prob_; };
   int length() const { return transition_.cols(); };
 
   Eigen::MatrixXd GermlineProbMatrix(
       std::pair<int, int> left_flexbounds, std::pair<int, int> right_flexbounds,
-      Eigen::Ref<Eigen::VectorXi> emission_indices, int relpos);
+      const Eigen::Ref<const Eigen::VectorXi>& emission_indices, int relpos);
 };
 }
 

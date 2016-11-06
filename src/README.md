@@ -8,6 +8,21 @@
 * [Google C++ style guide](https://google.github.io/styleguide/cppguide.html)
 
 
+## const, references, and Refs
+All passing of Eigen objects should be by reference to avoid copying.
+If these arguments are inputs, then they should be by const reference.
+In addition there is an [Eigen construct called `Ref`](http://eigen.tuxfamily.org/dox/TopicFunctionTakingEigenTypes.html#TopicUsingRefClass) that allows passing either a matrix-like object or a `Block` of that object.
+There are a silly number of combinations of these things, but we will use the following two for input (see [this SO question](http://stackoverflow.com/questions/21132538/correct-usage-of-the-eigenref-class), and the examples in [the Ref docs](https://eigen.tuxfamily.org/dox-devel/classEigen_1_1Ref.html)):
+
+* `const Eigen::Ref<const Eigen::MatrixXd>&`: const input
+* `Eigen::Ref<Eigen::MatrixXd>`: writeable input
+
+Now return types.
+Indeed, trying to return a  `const Eigen::Ref<const Eigen::MatrixXd>&` gives an error saying that we can't return a reference to a local temporary object, which I think means that we'd have to make a `Ref` object on the fly when what we really have is a Matrix or something.
+So for a const accessor we have `const Eigen::MatrixXd&`, and for now we don't need a non-const accessor.
+
+
+
 ## Glossary
 
 * *segment:* a contiguous sequence of bases that come from one type of state, e.g. V, N, D, etc.

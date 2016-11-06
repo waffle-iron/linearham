@@ -55,7 +55,7 @@ Smooshable::Smooshable(Eigen::Ref<Eigen::MatrixXd> marginal) {
 SmooshableXGermline::SmooshableXGermline(std::shared_ptr<Germline> Germ_ptr,
                                          std::pair<int, int> left_flexbounds,
                                          std::pair<int, int> right_flexbounds,
-                                         Eigen::Ref<Eigen::VectorXi> emission_indices,
+                                         const Eigen::Ref<const Eigen::VectorXi>& emission_indices,
                                          int relpos, bool pad_left) {
   Eigen::MatrixXd germline_prob_matrix = Germ_ptr->GermlineProbMatrix(left_flexbounds, right_flexbounds,
                                                                       emission_indices, relpos) * Germ_ptr->gene_prob();
@@ -93,7 +93,7 @@ SmooshableNGermline::SmooshableNGermline(std::shared_ptr<Germline> Germ_ptr,
                                          std::pair<int, int> left_flexbounds,
                                          std::pair<int, int> leftright_flexbounds,
                                          std::pair<int, int> right_flexbounds,
-                                         Eigen::Ref<Eigen::VectorXi> emission_indices,
+                                         const Eigen::Ref<const Eigen::VectorXi>& emission_indices,
                                          int relpos, bool pad_left) {
   Eigen::MatrixXd germline_prob_matrix = Germ_ptr->GermlineProbMatrix(leftright_flexbounds, right_flexbounds, emission_indices, relpos) * Germ_ptr->gene_prob();
 
@@ -118,7 +118,7 @@ SmooshableNGermline::SmooshableNGermline(std::shared_ptr<Germline> Germ_ptr,
 Smooshable VSmooshable(std::string yaml_path,
                        std::pair<int, int> V_left_flexbounds,
                        std::pair<int, int> V_right_flexbounds,
-                       Eigen::Ref<Eigen::VectorXi> emission_indices,
+                       const Eigen::Ref<const Eigen::VectorXi>& emission_indices,
                        int V_relpos) {
   YAML::Node root = GetYAMLRoot(yaml_path);
   std::shared_ptr<VGermline> VGerm_ptr(new VGermline(root));
@@ -132,7 +132,7 @@ Smooshable VSmooshable(std::string yaml_path,
 Smooshable VSmooshable1(std::string yaml_path,
                         std::pair<int, int> V_left_flexbounds,
                         std::pair<int, int> V_right_flexbounds,
-                        Eigen::Ref<Eigen::VectorXi> emission_indices,
+                        const Eigen::Ref<const Eigen::VectorXi>& emission_indices,
                         int V_relpos) {
   // initializing VGermline object
   YAML::Node root = GetYAMLRoot(yaml_path);
@@ -162,7 +162,7 @@ std::pair<Smooshable, Smooshable> DSmooshables(std::string yaml_path,
                                                std::pair<int, int> V_right_flexbounds,
                                                std::pair<int, int> D_left_flexbounds,
                                                std::pair<int, int> D_right_flexbounds,
-                                               Eigen::Ref<Eigen::VectorXi> emission_indices,
+                                               const Eigen::Ref<const Eigen::VectorXi>& emission_indices,
                                                int D_relpos) {
   YAML::Node root = GetYAMLRoot(yaml_path);
   std::shared_ptr<DGermline> DGerm_ptr(new DGermline(root));
@@ -177,7 +177,7 @@ std::pair<Smooshable, Smooshable> DSmooshables(std::string yaml_path,
   return std::make_pair(XSmoosh, NSmoosh);
 }
 
-void MultiplyLandingGermProbMat(const Eigen::Ref<Eigen::VectorXd> landing,
+void MultiplyLandingGermProbMat(const Eigen::Ref<const Eigen::VectorXd>& landing,
                                 Eigen::Ref<Eigen::MatrixXd> germ_prob_matrix,
                                 std::pair<int, int> left_flexbounds,
                                 int relpos) {
@@ -194,7 +194,7 @@ std::pair<Smooshable, Smooshable> DSmooshables1(std::string yaml_path,
                                                 std::pair<int, int> V_right_flexbounds,
                                                 std::pair<int, int> D_left_flexbounds,
                                                 std::pair<int, int> D_right_flexbounds,
-                                                Eigen::Ref<Eigen::VectorXi> emission_indices,
+                                                const Eigen::Ref<const Eigen::VectorXi>& emission_indices,
                                                 int D_relpos) {
   // initializing DGermline object
   YAML::Node root = GetYAMLRoot(yaml_path);
@@ -227,11 +227,12 @@ std::pair<Smooshable, Smooshable> DSmooshables1(std::string yaml_path,
   return std::make_pair(dx_smooshable, dn_smooshable);
 };
 
+
 std::pair<Smooshable, Smooshable> JSmooshables(std::string yaml_path,
                                                std::pair<int, int> D_right_flexbounds,
                                                std::pair<int, int> J_left_flexbounds,
                                                std::pair<int, int> J_right_flexbounds,
-                                               Eigen::Ref<Eigen::VectorXi> emission_indices,
+                                               const Eigen::Ref<const Eigen::VectorXi>& emission_indices,
                                                int J_relpos) {
   YAML::Node root = GetYAMLRoot(yaml_path);
   std::shared_ptr<JGermline> JGerm_ptr(new JGermline(root));
@@ -249,7 +250,7 @@ std::pair<Smooshable, Smooshable> JSmooshables1(std::string yaml_path,
                                                 std::pair<int, int> D_right_flexbounds,
                                                 std::pair<int, int> J_left_flexbounds,
                                                 std::pair<int, int> J_right_flexbounds,
-                                                Eigen::Ref<Eigen::VectorXi> emission_indices,
+                                                const Eigen::Ref<const Eigen::VectorXi>& emission_indices,
                                                 int J_relpos) {
   // initializing JGermline object
   YAML::Node root = GetYAMLRoot(yaml_path);

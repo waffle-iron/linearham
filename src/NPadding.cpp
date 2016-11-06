@@ -103,7 +103,7 @@ NPadding::NPadding(YAML::Node root) {
 /// A boolean specifying whether to pad the germline on the left (i.e. V gene)
 /// or on the right (i.e. J gene).
 double NPadding::NPaddingProb(std::pair<int, int> flexbounds,
-                              Eigen::Ref<Eigen::VectorXi> emission_indices,
+                              const Eigen::Ref<const Eigen::VectorXi>& emission_indices,
                               int read_pos, bool pad_left) {
   assert(flexbounds.first <= flexbounds.second);
   assert(flexbounds.first <= read_pos || read_pos <= flexbounds.second);
