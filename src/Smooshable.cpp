@@ -16,7 +16,7 @@ Smooshable::Smooshable(int left_flex, int right_flex) {
 
 
 /// @brief Constructor starting from marginal probabilities.
-Smooshable::Smooshable(Eigen::Ref<Eigen::MatrixXd> marginal) {
+Smooshable::Smooshable(const Eigen::Ref<const Eigen::MatrixXd>& marginal) {
   marginal_ = marginal;
   scaler_count_ = ScaleMatrix(marginal_);
   viterbi_ = marginal_;
@@ -70,8 +70,8 @@ std::pair<Smooshable, Smooshable> DSmooshables(
       V_right_flexbounds, D_right_flexbounds, emission_indices, D_relpos);
 
   // multiplying in the associated landing probabilities
-  MultiplyLandingGermProbMat(dgerm_obj.landing(), xgerm_prob_matrix,
-                             V_right_flexbounds, D_relpos);
+  MultiplyLandingGermProbMatrix(dgerm_obj.landing(), xgerm_prob_matrix,
+                                V_right_flexbounds, D_relpos);
 
   // computing the germline match probability matrix (assuming some left-NTIs)
   Eigen::MatrixXd ngerm_prob_matrix =
@@ -114,8 +114,8 @@ std::pair<Smooshable, Smooshable> JSmooshables(
           .col(end_pos);
 
   // multiplying in the associated landing probabilities
-  MultiplyLandingGermProbMat(jgerm_obj.landing(), xgerm_prob_col,
-                             D_right_flexbounds, J_relpos);
+  MultiplyLandingGermProbMatrix(jgerm_obj.landing(), xgerm_prob_col,
+                                D_right_flexbounds, J_relpos);
 
   // computing the germline match probability matrix (assuming some left-NTIs)
   // and extracting the same column as above.
@@ -146,7 +146,7 @@ std::pair<Smooshable, Smooshable> JSmooshables(
 
 // Auxiliary Functions
 
-void MultiplyLandingGermProbMat(
+void MultiplyLandingGermProbMatrix(
     const Eigen::Ref<const Eigen::VectorXd>& landing,
     Eigen::Ref<Eigen::MatrixXd> germ_prob_matrix,
     std::pair<int, int> left_flexbounds, int relpos) {
@@ -210,6 +210,7 @@ std::pair<Smooshable, Eigen::MatrixXi> Smoosh(const Smooshable& s_a,
   int k = ScaleMatrix(s_out.marginal());
   s_out.viterbi() *= pow(SCALE_FACTOR, k);
   s_out.scaler_count() += k;
+
   return std::make_pair(s_out, viterbi_idx);
 };
 }

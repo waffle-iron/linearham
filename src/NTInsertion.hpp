@@ -20,7 +20,6 @@ class NTInsertion {
 
  public:
   NTInsertion(){};
-  virtual ~NTInsertion(){};
   NTInsertion(YAML::Node root);
 
   const Eigen::VectorXd& n_landing_in() const { return n_landing_in_; };

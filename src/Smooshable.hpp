@@ -27,7 +27,7 @@ class Smooshable {
  public:
   Smooshable(){};
   Smooshable(int left_flex, int right_flex);
-  Smooshable(Eigen::Ref<Eigen::MatrixXd> marginal);
+  Smooshable(const Eigen::Ref<const Eigen::MatrixXd>& marginal);
 
   int left_flex() const { return marginal_.rows() - 1; };
   int right_flex() const { return marginal_.cols() - 1; };
@@ -35,12 +35,10 @@ class Smooshable {
   int scaler_count() const { return scaler_count_; };
   int& scaler_count() { return scaler_count_; };
 
-  const Eigen::Ref<const Eigen::MatrixXd> marginal() const {
-    return marginal_;
-  };
+  const Eigen::MatrixXd& marginal() const { return marginal_; };
   Eigen::Ref<Eigen::MatrixXd> marginal() { return marginal_; };
 
-  const Eigen::Ref<const Eigen::MatrixXd> viterbi() const { return viterbi_; };
+  const Eigen::MatrixXd& viterbi() const { return viterbi_; };
   Eigen::Ref<Eigen::MatrixXd> viterbi() { return viterbi_; };
 };
 
@@ -67,7 +65,7 @@ std::pair<Smooshable, Smooshable> JSmooshables(
 
 // Auxiliary Functions
 
-void MultiplyLandingGermProbMat(
+void MultiplyLandingGermProbMatrix(
     const Eigen::Ref<const Eigen::VectorXd>& landing,
     Eigen::Ref<Eigen::MatrixXd> germ_prob_matrix,
     std::pair<int, int> left_flexbounds, int relpos);

@@ -28,7 +28,6 @@ class Germline {
 
  public:
   Germline(){};
-  virtual ~Germline(){};
   Germline(YAML::Node root);
 
   const Eigen::VectorXd& landing() const { return landing_; };
