@@ -1,4 +1,4 @@
-box: matsengrp/cpp
+box: matsengrp/clang
 
 build:
     steps:
